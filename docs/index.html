@@ -594,6 +594,102 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 .plate.tall { max-width: 720px; margin-inline: auto; }
 .plate figcaption { margin-top: .7rem; font-size: .825rem; }
 
+/* ---------- interactive result figures ---------- */
+/* The five result figures are replotted live from the paper's own numbers,
+   which are recoverable exactly: hist_style.py emits vector PDFs where every
+   label, value and standard deviation is real text. What the raster cannot do
+   is let you choose. A figure like SARAS-ESAD is 20 configurations across six
+   metrics; on paper that is a wall, so here the metric is a control, the rows
+   can be filtered to the comparison you actually care about, and every bar
+   answers on hover. The original plate stays one click away underneath. */
+.hfig { margin: 0; }
+.hfig + .hfig { margin-top: 2.6rem; }
+.hfig .hbar {
+  display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; margin-bottom: .75rem;
+}
+.hfig .metrics { display: flex; gap: .35rem; flex-wrap: wrap; }
+.hfig .metrics button, .hfig .filters button {
+  font-family: var(--f-mono); font-size: .665rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-2);
+  background: transparent; border: 1px solid var(--rule-strong);
+  border-radius: 2px; padding: .32rem .58rem; cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+}
+.hfig .metrics button:hover, .hfig .filters button:hover { border-color: var(--ink-3); }
+/* The selected metric is the chart's title as much as a control, so it takes
+   the gold that marks the leading bar rather than a generic active state. */
+.hfig .metrics button[aria-pressed="true"] {
+  color: var(--gold-ink); border-color: var(--gold); font-weight: 600;
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.hfig .filters { display: flex; gap: .35rem; flex-wrap: wrap; margin-left: auto; }
+.hfig .filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--ink-3); }
+.hfig .filters button[aria-pressed="false"] { color: var(--ink-3); border-style: dashed; }
+
+.hplot {
+  position: relative; background: var(--surface);
+  border: 1px solid var(--rule-strong); border-radius: 3px; padding: .55rem .7rem;
+}
+/* Long configuration names need a fixed gutter to stay readable, so the canvas
+   keeps a floor and the box scrolls rather than crushing them; the tooltip sits
+   outside the scroller so it is positioned against the plot, not the content. */
+.hscroll { overflow-x: auto; overscroll-behavior-x: contain; }
+/* Wide mode needs room for the name gutter, so the box scrolls under about
+   560px; narrow mode redraws to fit and clears the floor entirely. */
+.hplot svg { display: block; width: 100%; min-width: 560px; height: auto; }
+@media (max-width: 620px) { .hplot svg { min-width: 0; } }
+.hplot .hgrid { stroke: var(--rule); stroke-width: 1; }
+.hplot .haxis { stroke: var(--rule-strong); stroke-width: 1; }
+.hplot .htick {
+  font-family: var(--f-mono); font-size: 9.5px; fill: var(--ink-3);
+}
+.hplot .hname { font-size: 10.5px; fill: var(--ink-2); }
+.hplot .hval {
+  font-family: var(--f-mono); font-size: 10px; fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.hplot .hsd { font-family: var(--f-mono); font-size: 8.8px; fill: var(--ink-3); }
+/* The three roles are the paper's own: gold the best bar in the panel, blue a
+   fine-tuned configuration, grey a frozen probe or external baseline. */
+.hplot .hb { transition: opacity .15s ease; }
+.hplot .hb.best rect.bar { fill: var(--gold); }
+.hplot .hb.ft   rect.bar { fill: var(--blue); }
+.hplot .hb.rest rect.bar { fill: var(--rule-strong); }
+.hplot .hb.rest .hname { fill: var(--ink-3); }
+.hplot .hb.best .hname, .hplot .hb.best .hval { fill: var(--ink); font-weight: 600; }
+.hplot .hb .hit { fill: transparent; }
+.hplot .hb.is-cold { opacity: .28; }
+.hplot .whisk { stroke: var(--ink); stroke-width: 1.4; }
+/* A hovered bar gets an ink hairline rather than a colour change, so its role
+   is still readable while it is highlighted. */
+.hplot .hb.is-hot rect.bar { stroke: var(--ink); stroke-width: 1.2; }
+.hplot .hb.is-hot .hname, .hplot .hb.is-hot .hval { fill: var(--ink); }
+.hplot svg [hidden] { display: none; }
+
+.htip {
+  position: absolute; pointer-events: none; z-index: 3;
+  background: var(--surface); border: 1px solid var(--ink);
+  border-radius: 2px; padding: .48rem .6rem; max-width: 15rem;
+  box-shadow: 0 2px 10px rgba(32, 44, 56, .13);
+  font-size: .775rem; line-height: 1.45;
+}
+.htip[hidden] { display: none; }
+.htip .hd { font-weight: 600; }
+.htip .n {
+  font-family: var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--ink-2); font-size: .74rem; margin-top: .2rem;
+}
+.htip .rl {
+  font-family: var(--f-mono); font-size: .625rem; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-3); margin-top: .22rem;
+}
+.hfig figcaption { margin-top: .7rem; font-size: .825rem; }
+
+@media (max-width: 620px) {
+  .hfig .metrics button, .hfig .filters button { font-size: .6rem; padding: .28rem .45rem; }
+  .hfig .filters { margin-left: 0; flex-basis: 100%; }
+}
+
 /* ---------- table ---------- */
 /* Five columns do not need the full 1140px column — at that width the run
    names and their numbers drift apart. The box is capped and centred instead. */
@@ -1183,64 +1279,115 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 
     <div class="sub-head">
       <h3>The complete figures from the paper</h3>
-      <p>The panels above compress each benchmark to one representative metric. Below are the paper's own
-      result figures in full: every encoder configuration, every metric, and the three-seed standard
-      deviation drawn on each bar. Gold marks the best bar in a panel, solid blue a fine-tuned
-      configuration, grey a frozen probe or external baseline.</p>
+      <p>The panels above compress each benchmark to one representative metric. Below is every result
+      figure in full — each encoder configuration, each metric, and the three-seed standard deviation —
+      replotted from the paper's own values so a metric can be selected and the field narrowed to the
+      comparison at hand. Gold marks the best bar in a panel, solid blue a fine-tuned configuration, grey a
+      frozen probe or external baseline. Each figure links to the original plate.</p>
+      <p style="margin-top:.7rem">One difference from the printed plates: every axis here starts at zero, so
+      bar length stays proportional to the value. Several paper panels crop the axis to spread a tight field
+      out, which reads well on the page but makes a bar twice as long as another that is a few points behind
+      it. Every mean and standard deviation is the paper's own.</p>
     </div>
 
-    <div class="plates">
-      <figure class="plate tall">
+    <div class="hfigs">
+      <figure class="hfig" data-fig="sar">
         <div class="platehead">
-          <h3>SAR-RARP50</h3><span class="metric">Fig. 6 · segmental F₁@10 and frame-macro F₁</span>
-          <a class="full" href="static/images/hist_sar.png" target="_blank" rel="noopener">Open full size</a>
+          <h3>SAR-RARP50</h3><span class="metric">Fig. 6 · two metrics · 15 configurations</span>
+          <a class="full" href="static/images/hist_sar.png" target="_blank" rel="noopener">Paper figure</a>
         </div>
-        <div class="frame">
-          <img src="static/images/hist_sar.png" width="2372" height="1922" loading="lazy" alt="Two horizontal bar panels for SAR-RARP50, segmental F1@10 and frame-macro F1, sixteen encoder configurations each, with three-seed error bars.">
+        <div class="hbar">
+          <div class="metrics" role="group" aria-label="SAR-RARP50 metric"></div>
+          <div class="filters" role="group" aria-label="SAR-RARP50 row filter">
+            <button type="button" data-only="omniras" aria-pressed="false">OmniRAS only</button>
+            <button type="button" data-only="ft" aria-pressed="false">Fine-tuned only</button>
+          </div>
+        </div>
+        <div class="hplot">
+          <div class="hscroll">
+            <svg role="img" aria-label="Two horizontal bar panels for SAR-RARP50, segmental F1@10 and frame-macro F1, sixteen encoder configurations each, with three-seed error bars."></svg>
+          </div>
+          <div class="htip" hidden></div>
         </div>
         <figcaption><b>SAR-RARP50 action recognition, official test split.</b> Every billion-scale video encoder already clears the published 84.10 reference under frozen probing; full fine-tuning of the 36.86 M-sample OmniRAS 2B checkpoint gives the strongest result in both panels. Error bars are the three-seed standard deviation; the published reference reports none.</figcaption>
       </figure>
-
-      <figure class="plate tall">
+      <figure class="hfig" data-fig="grasp">
         <div class="platehead">
-          <h3>GraSP</h3><span class="metric">Fig. 10 · phase and step, mAP and F₁</span>
-          <a class="full" href="static/images/hist_grasp.png" target="_blank" rel="noopener">Open full size</a>
+          <h3>GraSP</h3><span class="metric">Fig. 10 · four metrics · 14 configurations</span>
+          <a class="full" href="static/images/hist_grasp.png" target="_blank" rel="noopener">Paper figure</a>
         </div>
-        <div class="frame">
-          <img src="static/images/hist_grasp.png" width="2372" height="3114" loading="lazy" alt="Four horizontal bar panels for GraSP: phase mAP, phase F1, step mAP and step F1, with three-seed error bars.">
+        <div class="hbar">
+          <div class="metrics" role="group" aria-label="GraSP metric"></div>
+          <div class="filters" role="group" aria-label="GraSP row filter">
+            <button type="button" data-only="omniras" aria-pressed="false">OmniRAS only</button>
+            <button type="button" data-only="ft" aria-pressed="false">Fine-tuned only</button>
+          </div>
+        </div>
+        <div class="hplot">
+          <div class="hscroll">
+            <svg role="img" aria-label="Four horizontal bar panels for GraSP: phase mAP, phase F1, step mAP and step F1, with three-seed error bars."></svg>
+          </div>
+          <div class="htip" hidden></div>
         </div>
         <figcaption><b>GraSP phase and step recognition.</b> The two optima fall under different adaptation regimes: full fine-tuning leads phase recognition, while last-four-block fine-tuning leads step recognition and full fine-tuning drops to 38.91 step mAP. TAPIS is a single published number and carries no error bar.</figcaption>
       </figure>
-
-      <figure class="plate">
+      <figure class="hfig" data-fig="pr">
         <div class="platehead">
-          <h3>OmniRAS-PR</h3><span class="metric">Fig. 8 · six frame-wise and segmental metrics</span>
-          <a class="full" href="static/images/hist_pr.png" target="_blank" rel="noopener">Open full size</a>
+          <h3>OmniRAS-PR</h3><span class="metric">Fig. 8 · six metrics · 13 configurations</span>
+          <a class="full" href="static/images/hist_pr.png" target="_blank" rel="noopener">Paper figure</a>
         </div>
-        <div class="frame">
-          <img src="static/images/hist_pr.png" width="2671" height="1635" loading="lazy" alt="Six horizontal bar panels for OmniRAS-PR: phase F1, phase mAP, segmental F1@10, F1@25, F1@50 and edit score, with three-seed error bars.">
+        <div class="hbar">
+          <div class="metrics" role="group" aria-label="OmniRAS-PR metric"></div>
+          <div class="filters" role="group" aria-label="OmniRAS-PR row filter">
+            <button type="button" data-only="omniras" aria-pressed="false">OmniRAS only</button>
+            <button type="button" data-only="ft" aria-pressed="false">Fine-tuned only</button>
+          </div>
+        </div>
+        <div class="hplot">
+          <div class="hscroll">
+            <svg role="img" aria-label="Six horizontal bar panels for OmniRAS-PR: phase F1, phase mAP, segmental F1@10, F1@25, F1@50 and edit score, with three-seed error bars."></svg>
+          </div>
+          <div class="htip" hidden></div>
         </div>
         <figcaption><b>OmniRAS-PR phase recognition and temporal segmentation.</b> Frame-F₁ and phase mAP measure per-frame discrimination; F₁@10/25/50 and the edit score additionally penalise fragmented predictions. The adapted configurations occupy the top of every ranking. Error bars are the three-seed standard deviation.</figcaption>
       </figure>
-
-      <figure class="plate">
+      <figure class="hfig" data-fig="triplets">
         <div class="platehead">
-          <h3>YT-Chole Triplets</h3><span class="metric">Fig. 7 · joint IVT and the three component axes</span>
-          <a class="full" href="static/images/hist_triplets.png" target="_blank" rel="noopener">Open full size</a>
+          <h3>YT-Chole Triplets</h3><span class="metric">Fig. 7 · five metrics · 13 configurations</span>
+          <a class="full" href="static/images/hist_triplets.png" target="_blank" rel="noopener">Paper figure</a>
         </div>
-        <div class="frame">
-          <img src="static/images/hist_triplets.png" width="2671" height="1635" loading="lazy" alt="Five horizontal bar panels for YT-Chole triplet recognition: joint IVT mAP, tool, verb, target, and the mean of the three axes, with three-seed error bars.">
+        <div class="hbar">
+          <div class="metrics" role="group" aria-label="YT-Chole Triplets metric"></div>
+          <div class="filters" role="group" aria-label="YT-Chole Triplets row filter">
+            <button type="button" data-only="omniras" aria-pressed="false">OmniRAS only</button>
+            <button type="button" data-only="ft" aria-pressed="false">Fine-tuned only</button>
+          </div>
+        </div>
+        <div class="hplot">
+          <div class="hscroll">
+            <svg role="img" aria-label="Five horizontal bar panels for YT-Chole triplet recognition: joint IVT mAP, tool, verb, target, and the mean of the three axes, with three-seed error bars."></svg>
+          </div>
+          <div class="htip" hidden></div>
         </div>
         <figcaption><b>YT-Chole action-triplet recognition.</b> Joint ⟨tool, verb, target⟩ mAP alongside the three component axes. Depth of adaptation matters more here than anywhere else in the suite: extending fine-tuning from the last four to the last eight blocks lifts joint IVT mAP from 37.68 to 39.92. Target recognition carries the remaining headroom.</figcaption>
       </figure>
-
-      <figure class="plate">
+      <figure class="hfig" data-fig="esad">
         <div class="platehead">
-          <h3>SARAS-ESAD</h3><span class="metric">Fig. 9 · detection AP and bounding-box metrics</span>
-          <a class="full" href="static/images/hist_esad.png" target="_blank" rel="noopener">Open full size</a>
+          <h3>SARAS-ESAD</h3><span class="metric">Fig. 9 · six metrics · 20 configurations</span>
+          <a class="full" href="static/images/hist_esad.png" target="_blank" rel="noopener">Paper figure</a>
         </div>
-        <div class="frame">
-          <img src="static/images/hist_esad.png" width="2671" height="1954" loading="lazy" alt="Six horizontal bar panels for SARAS-ESAD: AP mean, AP10, AP50, presence mAP, mean IoU and box mAP@50, each with three-seed error bars.">
+        <div class="hbar">
+          <div class="metrics" role="group" aria-label="SARAS-ESAD metric"></div>
+          <div class="filters" role="group" aria-label="SARAS-ESAD row filter">
+            <button type="button" data-only="omniras" aria-pressed="false">OmniRAS only</button>
+            <button type="button" data-only="ft" aria-pressed="false">Fine-tuned only</button>
+          </div>
+        </div>
+        <div class="hplot">
+          <div class="hscroll">
+            <svg role="img" aria-label="Six horizontal bar panels for SARAS-ESAD: AP mean, AP10, AP50, presence mAP, mean IoU and box mAP@50, each with three-seed error bars."></svg>
+          </div>
+          <div class="htip" hidden></div>
         </div>
         <figcaption><b>SARAS-ESAD action detection, common-population rescoring.</b> Last-four-block adaptation with augmentation leads AP<sub>mean</sub>, AP10 and AP50, above the best challenge submission on each. Augmentation is applied to our models only. The challenge submission is a single published number with no seed spread.</figcaption>
       </figure>
@@ -1931,6 +2078,285 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       rows.appendChild(tr);
     });
   });
+})();
+
+
+/* =====================================================================
+   Interactive result figures (Figs. 6-10)
+   =====================================================================
+   The five result plates are vector PDFs out of hist_style.py, so every
+   label, value and standard deviation on them is real text and could be
+   read back exactly rather than measured. HIST below is that readout: the
+   same bars the paper prints, in the same order, carrying the same three
+   colour roles (gold = best in panel, blue = fine-tuned, grey = frozen
+   probe or external baseline).
+
+   Rendering them here rather than shipping the raster buys the one thing
+   print cannot give: a choice. SARAS-ESAD alone is 20 configurations over
+   six metrics, which on paper is a wall of bars. Here the metric is a
+   control, the field can be narrowed to OmniRAS or to the fine-tuned arms,
+   and each bar states its exact mean and spread on hover.
+
+   Layout: figures share one plotter, so the axis is computed per panel from
+   its own values -- the ESAD panels are raw AP in [0,1] while the rest are
+   percentages, and forcing both onto 0-100 would flatten the detection
+   figure to nothing.
+
+   Compact blob: labels repeat across a figure's panels, so they are hoisted
+   into one `rows` array per figure and each bar carries its index. A bar is
+   [rowIndex, value, sd|null, role] with role 0=best, 1=ft, 2=rest.
+*/
+var HIST = {"sar":{"name":"SAR-RARP50","fig":"Fig. 6","scale":"pct","rows":["OmniRAS 2B full FT","OmniRAS 2B 37M FT4","OmniRAS 2B FT4","OmniRAS 1B FT4","Meta 2B raw FT4","OmniRAS 2B 9.2M","Meta 1B raw FT4","OmniRAS 2B 37M","OmniRAS 1B e19","Meta 2B raw","Meta 1B raw","SOTA published","LemonFM ConvNeXt-L","EndoViT ~86 M","SurgeNet-XL 300 M"],"panels":[{"t":"Segmental F₁@10","b":[[0,91.56,0.25,0],[1,90.88,0.09,1],[2,89.39,0.5,1],[3,89.35,0.73,1],[4,89.09,0.53,1],[5,88.06,0.31,2],[6,87.55,1.54,1],[7,87.43,0.38,2],[8,86.27,0.39,2],[9,86.01,0.51,2],[10,85.81,0.7,2],[11,84.1,null,2],[12,74.99,null,2],[13,69.78,0.36,2],[14,68.11,0.91,2]]},{"t":"Frame-macro F₁","b":[[0,83.86,0.16,0],[1,83.05,0.17,1],[2,79.49,1.17,1],[4,78.93,1.32,1],[3,77.92,2.16,1],[5,75.53,1.05,2],[6,75.44,1.99,1],[10,72.22,1.55,2],[7,71.34,1.23,2],[8,69.74,5.09,2],[9,69.7,3.42,2],[12,51.77,null,2],[14,44.36,null,2],[13,41.48,null,2]]}]},"grasp":{"name":"GraSP","fig":"Fig. 10","scale":"pct","rows":["OmniRAS 2B FT full FT","OmniRAS 2B 37M FT4","Meta 2B","OmniRAS 2B 37M","Meta 2B FT4","OmniRAS 1B FT4","OmniRAS 1B","Meta 1B","Meta 1B FT4","TAPIS SOTA e2e","LemonFM ConvNeXt-L FT4","LemonFM ConvNeXt-L","SurgeNet-XL CaFormer-S18","EndoViT frozen"],"panels":[{"t":"Phase mAP","b":[[0,85.34,0.33,0],[1,83.41,0.63,1],[2,82.4,0.34,2],[3,82.39,1.49,2],[4,81.61,0.74,1],[5,81.42,1.06,1],[6,80.29,0.88,2],[7,78.61,1.15,2],[8,78.13,0.94,1],[9,76.72,null,2],[10,75.37,0.31,1],[11,72.28,1.31,2],[12,67.58,null,2],[13,60.23,2.35,2]]},{"t":"Phase F₁","b":[[0,79.22,0.34,0],[3,77.0,0.52,2],[5,75.57,0.77,1],[2,74.79,0.27,2],[4,74.64,0.35,1],[6,73.93,0.66,2],[7,72.43,1.28,2],[8,71.7,0.99,1],[1,71.17,0.43,1],[10,68.39,null,1],[11,66.2,null,2],[9,63.42,null,2],[12,62.76,null,2],[13,57.91,1.54,2]]},{"t":"Step mAP","b":[[1,57.85,1.29,0],[4,57.6,0.94,1],[2,56.77,0.4,2],[6,56.38,0.28,2],[7,55.02,0.86,2],[3,54.46,0.63,2],[5,54.28,0.56,1],[8,53.1,0.43,1],[9,52.01,null,2],[10,48.56,1.27,1],[11,45.67,0.08,2],[12,45.35,0.67,2],[0,38.91,1.04,1],[13,25.76,null,2]]},{"t":"Step F₁","b":[[3,56.22,0.58,0],[1,55.35,0.66,1],[4,54.09,0.53,1],[6,53.39,0.39,2],[2,53.05,0.67,2],[7,52.41,1.06,2],[5,52.35,0.75,1],[8,51.24,0.42,1],[10,47.46,1.25,1],[9,45.78,null,2],[12,44.72,0.25,2],[0,36.95,null,1],[11,31.44,1.25,2]]}]},"pr":{"name":"OmniRAS-PR","fig":"Fig. 8","scale":"pct","rows":["OmniRAS 2B FT4","OmniRAS 2B SITL-only","OmniRAS 2B frozen probe","Meta 2B FT4","OmniRAS 1B e19 FT4","OmniRAS 2B mix","Meta 1B FT4","SurgeNet-XL frozen","LemonFM frozen","LemonFM FT4","EndoViT frozen","Meta 2B","Meta 1B"],"panels":[{"t":"Phase F₁","b":[[0,47.92,0.53,0],[1,46.0,4.76,2],[2,44.89,2.18,2],[3,44.36,2.18,1],[4,43.05,3.63,1],[5,42.79,1.88,2],[6,38.43,1.44,1],[7,36.59,2.71,2],[8,34.94,1.43,2],[9,34.27,0.42,1],[10,25.63,4.33,2],[11,23.76,4.03,2],[12,20.71,1.35,2]]},{"t":"Phase mAP","b":[[1,61.7,2.8,0],[0,61.11,0.85,1],[5,59.53,2.15,2],[2,58.63,0.81,2],[3,55.86,0.44,1],[4,55.17,2.36,1],[6,50.87,1.6,1],[7,46.15,2.46,2],[8,45.67,1.25,2],[9,43.24,0.34,1],[11,34.09,3.75,2],[12,31.36,1.32,2],[10,28.92,4.1,2]]},{"t":"Segmental F₁@10","b":[[0,67.15,0.78,0],[5,63.16,2.76,2],[3,62.42,2.17,1],[2,62.38,0.69,2],[4,60.65,3.83,1],[8,55.43,0.29,2],[7,54.59,1.53,2],[6,54.16,0.93,1],[11,54.04,0.71,2],[9,52.46,0.95,1],[12,51.74,0.84,2],[10,42.58,3.27,2],[1,24.73,4.2,2]]},{"t":"Segmental F₁@25","b":[[0,64.66,1.79,0],[5,61.39,2.69,2],[2,60.27,1.39,2],[3,59.98,1.82,1],[4,58.65,3.41,1],[6,52.7,1.46,1],[8,52.59,0.64,2],[7,52.36,1.77,2],[11,50.93,1.0,2],[9,50.18,1.58,1],[12,48.95,0.53,2],[10,39.42,2.68,2],[1,22.82,4.21,2]]},{"t":"Segmental F₁@50","b":[[0,59.76,2.0,0],[5,56.1,3.7,2],[2,56.06,1.94,2],[3,54.08,1.69,1],[4,52.11,3.83,1],[7,47.66,2.42,2],[6,45.21,1.47,1],[8,44.76,2.21,2],[11,43.73,3.09,2],[12,43.07,1.23,2],[9,41.67,1.64,1],[10,34.39,2.49,2],[1,20.34,4.21,2]]},{"t":"Edit score","b":[[0,61.22,1.81,0],[5,57.3,1.58,2],[2,56.06,1.99,2],[3,55.53,1.7,1],[4,53.64,2.53,1],[6,48.75,1.01,1],[11,48.27,1.63,2],[8,48.14,0.51,2],[7,47.21,1.33,2],[9,46.15,1.02,1],[12,46.0,0.69,2],[10,36.95,2.11,2],[1,18.62,3.94,2]]}]},"triplets":{"name":"YT-Chole Triplets","fig":"Fig. 7","scale":"pct","rows":["OmniRAS 2B 37M FT-8 FT8","OmniRAS 2B 37M FT4","OmniRAS 1B FT4","Meta 2B FT4","Meta 1B FT4","OmniRAS 2B 37M","Meta 2B","OmniRAS 1B e19","Meta 1B","SurgeNet-XL 300M","LemonFM res224 FT4","LemonFM res224","EndoViT ~86M"],"panels":[{"t":"Joint IVT mAP","b":[[0,39.92,0.91,0],[1,37.68,0.23,1],[2,35.49,0.72,1],[3,34.89,0.46,1],[4,33.35,0.25,1],[5,31.18,1.64,2],[6,29.97,0.56,2],[7,29.61,0.51,2],[8,28.54,0.31,2],[9,26.03,0.16,2],[10,21.35,0.06,1],[11,21.26,0.02,2],[12,9.14,0.14,2]]},{"t":"Tool mAP","b":[[0,93.71,0.44,0],[3,93.41,0.23,1],[2,93.34,0.34,1],[1,93.17,0.38,1],[4,92.88,0.24,1],[6,91.17,0.24,2],[5,89.72,1.58,2],[7,89.02,1.9,2],[9,88.91,0.19,2],[8,88.91,1.62,2],[10,84.19,0.25,1],[11,83.85,0.29,2],[12,49.41,0.23,2]]},{"t":"Verb mAP","b":[[0,85.32,0.43,0],[1,84.33,0.31,1],[2,83.05,0.09,1],[3,82.82,0.26,1],[4,81.89,0.44,1],[5,78.92,0.45,2],[6,77.22,1.37,2],[8,76.23,0.56,2],[7,75.28,1.47,2],[9,73.22,0.11,2],[10,70.63,0.3,1],[11,70.52,0.3,2],[12,51.41,0.14,2]]},{"t":"Target mAP","b":[[0,61.25,0.25,0],[1,59.54,0.62,1],[2,57.0,0.18,1],[3,55.19,0.53,1],[4,54.98,0.09,1],[5,54.13,0.46,2],[7,51.81,0.23,2],[6,50.66,0.83,2],[9,49.75,0.07,2],[8,49.04,1.05,2],[10,46.88,0.18,1],[11,46.87,0.22,2],[12,31.21,0.16,2]]},{"t":"Mean of the three axes","b":[[0,80.09,0.36,0],[1,79.01,0.33,1],[2,77.79,0.2,1],[3,77.14,0.26,1],[4,76.58,0.24,1],[5,74.25,0.82,2],[6,73.02,0.6,2],[7,72.04,0.63,2],[8,71.39,0.54,2],[9,70.62,0.09,2],[10,67.24,0.16,1],[11,67.08,0.19,2],[12,44.01,0.16,2]]}]},"esad":{"name":"SARAS-ESAD","fig":"Fig. 9","scale":"unit","rows":["OmniRAS 2B 37M · +aug FT4","Meta 2B · +aug FT4","OmniRAS 2B 37M · +aug L8 FT8","OmniRAS 2B 37M FT4","Meta 2B FT4","Challenge best submission","Meta 1B FT4","OmniRAS 1B e19 FT4","OmniRAS 2B 37M","OmniRAS 1B e19 · +aug","LemonFM FT4","LemonFM frozen","Meta 1B","Meta 1B · +aug","Meta 2B · +aug","OmniRAS 1B e19","Meta 2B","SurgeNet-XL FT4","SurgeNet-XL frozen","EndoViT frozen"],"panels":[{"t":"AP<sub>mean</sub>","b":[[0,0.2319,0.0199,0],[1,0.2132,0.0118,1],[2,0.2062,0.0378,1],[3,0.2035,0.0132,1],[4,0.1935,0.0334,1],[5,0.1928,null,2],[6,0.1855,0.0081,1],[7,0.1831,0.0039,1],[8,0.1793,0.0083,2],[9,0.1586,0.0082,2],[10,0.1585,0.0039,1],[11,0.1537,0.0156,2],[12,0.1459,0.0181,2],[13,0.1409,0.0046,2],[14,0.1362,0.041,2],[15,0.1339,0.0094,2],[16,0.1278,0.0096,2],[17,0.1256,0.0032,1],[18,0.1162,0.0006,2],[19,0.0853,0.0008,2]]},{"t":"AP10","b":[[0,0.3262,0.0084,0],[3,0.3185,0.0168,1],[1,0.3046,0.0164,1],[2,0.2963,0.0599,1],[10,0.2921,0.0073,1],[4,0.2828,0.0352,1],[5,0.2763,null,2],[11,0.2739,0.022,2],[6,0.2699,0.0144,1],[7,0.2639,0.0027,1],[8,0.2496,0.0088,2],[17,0.2346,0.0091,1],[18,0.2309,0.006,2],[12,0.2188,0.0208,2],[9,0.2163,0.0072,2],[13,0.2014,0.0038,2],[15,0.2004,0.0121,2],[14,0.1824,0.0533,2],[16,0.1815,0.0141,2],[19,0.1341,0.0024,2]]},{"t":"AP50","b":[[0,0.1127,0.0303,0],[2,0.0938,0.0181,1],[1,0.0871,0.0065,1],[5,0.0816,null,2],[8,0.0801,0.0081,2],[9,0.0795,0.0205,2],[14,0.0755,0.0227,2],[4,0.0736,0.0262,1],[7,0.0726,0.0056,1],[6,0.0721,0.0066,1],[3,0.068,0.0107,1],[13,0.0635,0.0083,2],[16,0.0593,0.0084,2],[12,0.0553,0.0151,2],[15,0.0466,0.0061,2],[19,0.043,0.0021,2],[11,0.0412,0.0173,2],[10,0.0325,0.0025,1],[17,0.0199,0.0013,1],[18,0.0181,0.0034,2]]},{"t":"Presence mAP","b":[[1,0.3262,0.0184,0],[0,0.3248,0.0087,1],[3,0.3159,0.0018,1],[10,0.3118,0.0064,1],[4,0.3079,0.0367,1],[11,0.2977,0.0245,2],[2,0.2902,0.0505,1],[18,0.2895,0.0046,2],[6,0.2857,0.006,1],[7,0.2795,0.0042,1],[17,0.271,0.0207,1],[8,0.2507,0.0042,2],[12,0.2358,0.0146,2],[9,0.2326,0.0057,2],[13,0.2168,0.0079,2],[15,0.2139,0.0074,2],[16,0.2035,0.0085,2],[14,0.1958,0.0511,2],[19,0.1622,0.0058,2]]},{"t":"Mean IoU","b":[[0,0.4765,0.0128,0],[14,0.4695,0.0021,2],[9,0.4684,0.0214,2],[8,0.4664,0.0128,2],[1,0.4627,0.0048,1],[16,0.4627,0.0056,2],[7,0.4614,0.0039,1],[2,0.4563,0.013,1],[6,0.455,0.0054,1],[4,0.4427,0.0163,1],[3,0.4426,0.0096,1],[13,0.4401,0.0056,2],[15,0.4371,0.0113,2],[12,0.4346,0.0138,2],[19,0.3945,0.0082,2],[10,0.3488,0.0045,1],[11,0.3419,0.0352,2],[17,0.3318,0.0068,1],[18,0.302,0.018,2]]},{"t":"Box mAP@50","b":[[0,0.5101,0.0343,0],[14,0.5045,0.0031,2],[9,0.4819,0.0622,2],[8,0.481,0.0284,2],[1,0.4758,0.0114,1],[16,0.4728,0.0206,2],[7,0.462,0.0119,1],[6,0.4596,0.0127,1],[2,0.4566,0.0319,1],[13,0.4482,0.0112,2],[4,0.4251,0.0414,1],[3,0.4209,0.0254,1],[12,0.4146,0.0292,2],[15,0.3883,0.0347,2],[19,0.3542,0.0061,2],[11,0.2276,0.0812,2],[10,0.2242,0.0052,1],[17,0.2082,0.0147,1],[18,0.1755,0.0286,2]]}]}};
+
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var ROLE = ['best', 'ft', 'rest'];
+  var ROLE_TEXT = {
+    best: 'Best in panel',
+    ft: 'Fine-tuned',
+    rest: 'Frozen probe or baseline'
+  };
+
+  function el(name, attrs, text) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  // Titles carry <sub> markup for AP_mean; SVG text has no innerHTML, so the
+  // one tag in play is unwrapped for the plot and kept for the buttons.
+  function plain(s) { return s.replace(/<[^>]+>/g, ''); }
+
+  // A round axis top just above the tallest whisker. Percentages step in
+  // fives, raw AP in units of .05, so both land on readable ticks.
+  function axisTop(max, unit) {
+    var step = unit ? 0.05 : 5;
+    return Math.min(unit ? 1 : 100, Math.ceil((max * 1.06) / step) * step);
+  }
+
+  function fmt(v, unit) { return unit ? v.toFixed(4).replace(/0+$/, '').replace(/\.$/, '.0') : v.toFixed(2); }
+  // The figures print the spread bare-decimal in the raw-AP panels (".0199")
+  // and two-place in the percentage panels, so the page follows suit.
+  function sdText(sd, unit) { return unit ? sd.toFixed(4).replace(/^0/, '') : sd.toFixed(2); }
+
+  function build(fig) {
+    var key = fig.getAttribute('data-fig');
+    var D = HIST[key];
+    if (!D) return;
+
+    var unit = D.scale === 'unit';
+    var svg = fig.querySelector('svg');
+    var tip = fig.querySelector('.htip');
+    var plot = fig.querySelector('.hplot');
+    var metrics = fig.querySelector('.metrics');
+    var filters = fig.querySelectorAll('.filters button');
+
+    var active = 0;
+    var only = { omniras: false, ft: false };
+
+    D.panels.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = p.t;
+      b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        active = i;
+        metrics.querySelectorAll('button').forEach(function (o, j) {
+          o.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+        });
+        draw();
+      });
+      metrics.appendChild(b);
+    });
+
+    filters.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-only');
+        only[k] = !only[k];
+        b.setAttribute('aria-pressed', only[k] ? 'true' : 'false');
+        draw();
+      });
+    });
+
+    function keep(bar) {
+      if (only.omniras && D.rows[bar[0]].indexOf('OmniRAS') !== 0) return false;
+      if (only.ft && ROLE[bar[3]] === 'rest') return false;
+      return true;
+    }
+
+    function hideTip() {
+      tip.hidden = true;
+      svg.querySelectorAll('.hb').forEach(function (g) { g.classList.remove('is-hot', 'is-cold'); });
+    }
+
+    function draw() {
+      var P = D.panels[active];
+      var bars = P.b.filter(keep);
+      // Filtering to nothing would draw an empty frame with no explanation;
+      // fall back to the full panel and drop the filters instead.
+      if (!bars.length) {
+        bars = P.b;
+        only.omniras = only.ft = false;
+        filters.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+      }
+
+      var ROW = 21, GAP = 5;
+      // The left gutter is measured, not guessed: names range from "Meta 2B" to
+      // "OmniRAS 2B 37M · +aug L8 FT8", and a fixed gutter either clips the long
+      // ones or wastes half the plot on the short ones. Same for the right
+      // margin, which has to hold the longest value+sd pair.
+      var M = { t: 26, r: 60, b: 26, l: 152 };
+      // On a phone the gutter plus the value column would leave a sliver of
+      // axis, and the figure would open on fifteen bars of identical visible
+      // length. Below that width the name moves above its own bar instead, so
+      // the whole chart fits the screen and no one has to scroll to find out
+      // which bar is longer.
+      var narrow = plot.clientWidth > 0 && plot.clientWidth < 520;
+      if (narrow) { M = { t: 26, r: 8, b: 26, l: 8 }; ROW = 15; GAP = 21; }
+      var PH = bars.length * ROW + (bars.length - 1) * GAP;
+      if (narrow) M.t += 6;   // room for the first row's label above its bar
+      var W = narrow ? 380 : 900, PW = W - M.l - M.r, H = M.t + PH + M.b;
+
+      var top = axisTop(Math.max.apply(null, bars.map(function (b) {
+        return b[1] + (b[2] || 0);
+      })), unit);
+      var x = function (v) { return M.l + (v / top) * PW; };
+
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      // Pass one: lay the text down, measure it, and size the margins around it.
+      var probe = el('g', { visibility: 'hidden' });
+      svg.appendChild(probe);
+      var nameW = 0, valW = 0;
+      bars.forEach(function (b) {
+        // Measured inside a matching role wrapper: the best row is set in 600,
+        // so measuring it at the default weight under-reads its width and the
+        // gutter comes out one row too narrow.
+        var wrap = el('g', { 'class': 'hb ' + ROLE[b[3]] });
+        probe.appendChild(wrap);
+        var n = el('text', { 'class': 'hname' }, D.rows[b[0]]);
+        wrap.appendChild(n);
+        nameW = Math.max(nameW, n.getComputedTextLength());
+        var t = el('text', { 'class': 'hval' }, fmt(b[1], unit) + (b[2] ? '  ±' + sdText(b[2], unit) : ''));
+        wrap.appendChild(t);
+        valW = Math.max(valW, t.getComputedTextLength());
+      });
+      svg.removeChild(probe);
+      // getComputedTextLength returns 0 before layout in some engines; the
+      // authored margins stand in when that happens.
+      if (!narrow) {
+        if (nameW) M.l = Math.min(Math.ceil(nameW) + 14, 300);
+        if (valW) M.r = Math.ceil(valW) + 18;
+      }
+      PW = W - M.l - M.r;
+
+      svg.appendChild(el('text', { 'class': 'htick', x: M.l, y: 12,
+        'font-weight': '600', fill: 'var(--ink)' }, plain(P.t)));
+
+      var ticks = 5, i;
+      for (i = 0; i <= ticks; i++) {
+        var tv = (top / ticks) * i;
+        svg.appendChild(el('line', { 'class': 'hgrid', x1: x(tv), x2: x(tv),
+                                     y1: M.t, y2: M.t + PH }));
+        svg.appendChild(el('text', { 'class': 'htick', x: x(tv), y: M.t + PH + 15,
+          'text-anchor': 'middle' }, unit ? tv.toFixed(2) : String(Math.round(tv))));
+      }
+      svg.appendChild(el('line', { 'class': 'haxis', x1: M.l, x2: M.l, y1: M.t, y2: M.t + PH }));
+
+      bars.forEach(function (b, bi) {
+        var name = D.rows[b[0]], v = b[1], sd = b[2], role = ROLE[b[3]];
+        var y = M.t + bi * (ROW + GAP), w = Math.max(x(v) - M.l, 1);
+
+        var g = el('g', { 'class': 'hb ' + role });
+        g.appendChild(el('rect', { 'class': 'bar', x: M.l, y: y, width: w, height: ROW, rx: 2 }));
+
+        if (sd) {
+          var lo = x(Math.max(v - sd, 0)), hi = x(Math.min(v + sd, top));
+          var mid = y + ROW / 2;
+          var wk = el('g', { 'class': 'whisk' });
+          wk.appendChild(el('line', { x1: lo, x2: hi, y1: mid, y2: mid }));
+          wk.appendChild(el('line', { x1: lo, x2: lo, y1: y + 2, y2: y + ROW - 2 }));
+          wk.appendChild(el('line', { x1: hi, x2: hi, y1: y + 2, y2: y + ROW - 2 }));
+          g.appendChild(wk);
+        }
+
+        var vtxt = fmt(v, unit) + (sd ? '  ±' + sdText(sd, unit) : '');
+        if (narrow) {
+          // Name and number share the line above the bar, one at each end.
+          g.appendChild(el('text', { 'class': 'hname', x: M.l, y: y - 4 }, name));
+          g.appendChild(el('text', { 'class': 'hval', x: M.l + PW, y: y - 4,
+                                     'text-anchor': 'end' }, vtxt));
+        } else {
+          g.appendChild(el('text', { 'class': 'hname', x: M.l - 9, y: y + ROW / 2 + 3.6,
+                                     'text-anchor': 'end' }, name));
+          // The value sits clear of the upper whisker rather than of the bar
+          // end, so a wide seed spread never has a number drawn across it.
+          var vx = (sd ? x(Math.min(v + sd, top)) : M.l + w) + 8;
+          var vt = el('text', { 'class': 'hval', x: vx, y: y + ROW / 2 + 3.4 }, fmt(v, unit));
+          g.appendChild(vt);
+          if (sd) {
+            // Measured rather than estimated from the digit count: the value is
+            // tabular but the two texts are set at different sizes.
+            var st = el('text', { 'class': 'hsd', y: y + ROW / 2 + 3.4 }, '±' + sdText(sd, unit));
+            g.appendChild(st);
+            st.setAttribute('x', vx + (vt.getComputedTextLength() || fmt(v, unit).length * 6.1) + 4);
+          }
+        }
+
+        // One transparent band per row spanning the full plot, so the whole
+        // row is the hit target rather than only the drawn bar -- a short bar
+        // would otherwise be nearly impossible to hover.
+        var hit = el('rect', { 'class': 'hit', x: 0, y: y - GAP / 2,
+                               width: W, height: ROW + GAP });
+        g.appendChild(hit);
+
+        g.addEventListener('mouseenter', function () {
+          svg.querySelectorAll('.hb').forEach(function (o) {
+            o.classList.toggle('is-cold', o !== g);
+          });
+          g.classList.add('is-hot');
+          tip.innerHTML = '<div class="hd"></div><div class="n"></div><div class="rl"></div>';
+          tip.querySelector('.hd').textContent = name;
+          tip.querySelector('.n').textContent = plain(P.t) + '  ' + fmt(v, unit) +
+            (sd ? '  ± ' + (unit ? sd.toFixed(4) : sd.toFixed(2)) + ' s.d.' : '  (no seed spread reported)');
+          tip.querySelector('.rl').textContent = ROLE_TEXT[role];
+          tip.hidden = false;
+        });
+        g.addEventListener('mousemove', function (ev) {
+          var pr = plot.getBoundingClientRect();
+          var tw = tip.offsetWidth, th = tip.offsetHeight;
+          // Clamped to the plot box, and flipped above the cursor near the
+          // bottom edge, so the tip never hangs off the figure.
+          var lx = Math.min(Math.max(ev.clientX - pr.left + 14, 6), pr.width - tw - 6);
+          var ly = ev.clientY - pr.top + 16;
+          if (ly + th > pr.height - 6) ly = ev.clientY - pr.top - th - 12;
+          tip.style.left = lx + 'px';
+          tip.style.top = Math.max(ly, 6) + 'px';
+        });
+        svg.appendChild(g);
+      });
+    }
+
+    plot.addEventListener('mouseleave', hideTip);
+
+    // The narrow/wide choice depends on the rendered width, so it is re-made
+    // whenever that changes -- a rotation, or a desktop window being narrowed.
+    var wasNarrow = null;
+    function redrawIfModeChanged() {
+      var n = plot.clientWidth > 0 && plot.clientWidth < 520;
+      if (n !== wasNarrow) { wasNarrow = n; draw(); }
+    }
+    if (window.ResizeObserver) new ResizeObserver(redrawIfModeChanged).observe(plot);
+    else window.addEventListener('resize', redrawIfModeChanged);
+
+    draw();
+    wasNarrow = plot.clientWidth > 0 && plot.clientWidth < 520;
+  }
+
+  document.querySelectorAll('.hfig').forEach(build);
 })();
 </script>
 
