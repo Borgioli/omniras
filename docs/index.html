@@ -46,7 +46,7 @@
   --f-mono:    "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
 
   --wrap: 1140px;
-  --read: 68ch;
+  --read: 100%;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -84,6 +84,9 @@ p { margin: 0; }
 }
 
 /* ---------- intro overture ---------- */
+/* The overture is the model card assembling itself: the wordmark, then the
+   corpus dial that opens the card, then the campaign's own numbers, then the
+   six benchmarks the card resolves into. Every figure shown is a real one. */
 .intro {
   position: fixed; inset: 0; z-index: 100;
   background: #ffffff;
@@ -93,12 +96,21 @@ p { margin: 0; }
 .intro[hidden] { display: none; }
 .intro.done { opacity: 0; pointer-events: none; transition: opacity .62s ease; }
 .intro-stage {
+  display: grid; justify-items: center; gap: clamp(1.1rem, 2.6vh, 2rem);
+  width: min(100% - 3rem, 880px);
+}
+.intro-eyebrow {
+  font-family: var(--f-mono); font-size: clamp(.6rem, 1.5vw, .715rem);
+  letter-spacing: .19em; text-transform: uppercase; color: var(--ink-3);
+  text-align: center; animation: fade-in .6s ease .30s both;
+}
+.intro-top {
   display: grid; grid-template-columns: auto auto; align-items: center;
   gap: clamp(1.5rem, 4vw, 3.4rem);
 }
 .intro-word {
   font-family: var(--f-display); font-weight: 700;
-  font-size: clamp(2.6rem, 9vw, 6.4rem); line-height: .9;
+  font-size: clamp(2.4rem, 8vw, 5.6rem); line-height: .9;
   letter-spacing: -0.03em; color: var(--ink);
   display: flex;
 }
@@ -108,8 +120,9 @@ p { margin: 0; }
   animation: word-in .62s cubic-bezier(.22,.9,.3,1) both;
 }
 @keyframes word-in { from { opacity: 0; transform: translateY(0.42em); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
-.intro-dial { position: relative; width: clamp(150px, 26vw, 232px); aspect-ratio: 1; }
+.intro-dial { position: relative; width: clamp(132px, 21vw, 196px); aspect-ratio: 1; }
 .intro-dial svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
 .intro-dial circle { fill: none; stroke-linecap: butt; }
 .intro-dial .arc {
@@ -121,28 +134,68 @@ p { margin: 0; }
 .intro-dial .hub {
   position: absolute; inset: 0; display: grid; place-content: center;
   text-align: center;
-  animation: hub-in .7s ease .95s both;
+  animation: hub-in .7s ease .88s both;
 }
 .intro-dial .hub b {
   display: block; font-family: var(--f-display); font-weight: 700;
-  font-size: clamp(1.5rem, 4.4vw, 2.3rem); letter-spacing: -0.02em;
+  font-size: clamp(1.35rem, 3.9vw, 2.05rem); letter-spacing: -0.02em;
   color: var(--blue); line-height: 1; font-variant-numeric: tabular-nums;
 }
 .intro-dial .hub em {
   display: block; margin-top: .34rem; font-style: normal;
-  font-family: var(--f-mono); font-size: .615rem; letter-spacing: .17em;
+  font-family: var(--f-mono); font-size: .6rem; letter-spacing: .17em;
   text-transform: uppercase; color: var(--ink-3);
 }
 @keyframes hub-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* the rule that opens the card's lower half */
+.intro-rule {
+  width: 100%; height: 1px; background: var(--rule-strong);
+  transform-origin: left center;
+  animation: rule-draw .78s cubic-bezier(.22,.9,.3,1) 1.02s both;
+}
+@keyframes rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* the campaign's own numbers, in the card's own order */
+.intro-figs {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: clamp(1.1rem, 3.4vw, 2.7rem);
+}
+.intro-fig { text-align: center; animation: rise-sm .55s cubic-bezier(.22,.9,.3,1) var(--d) both; }
+.intro-fig b {
+  display: block; font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(1.05rem, 2.7vw, 1.5rem); letter-spacing: -0.015em;
+  color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.intro-fig span {
+  display: block; margin-top: .38rem; font-family: var(--f-mono);
+  font-size: .585rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3);
+}
+@keyframes rise-sm { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+
+/* the six task families the card resolves into */
+.intro-tasks { display: flex; flex-wrap: wrap; justify-content: center; gap: .42rem; }
+.intro-tasks i {
+  font-style: normal; font-family: var(--f-mono); font-size: .615rem;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2);
+  border: 1px solid var(--rule-strong); border-radius: 2px; padding: .26rem .54rem;
+  animation: rise-sm .46s cubic-bezier(.22,.9,.3,1) var(--d) both;
+}
 
 .intro-skip {
   position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
   background: none; border: 0; cursor: pointer; padding: .5rem 1rem;
   font-family: var(--f-mono); font-size: .68rem; letter-spacing: .13em;
   text-transform: uppercase; color: var(--ink-3);
-  animation: hub-in .5s ease 1.5s both;
+  animation: hub-in .5s ease 2.3s both;
 }
 .intro-skip:hover { color: var(--blue); }
+@media (max-width: 560px) {
+  .intro-top { grid-template-columns: 1fr; justify-items: center; gap: 1.1rem; }
+  /* 6 figures wrap 5+1 under flex; a 3-column grid keeps them in two even rows */
+  .intro-figs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem .6rem; width: 100%; }
+  .intro-tasks { display: none; }
+}
 
 /* the page assembling behind the curtain */
 body.is-intro { overflow: hidden; }
@@ -215,8 +268,8 @@ body.intro-done .figframe img { animation: card-in 1.15s cubic-bezier(.22,.9,.3,
   margin-bottom: .85rem;
 }
 .hero .standfirst {
-  font-size: clamp(1.06rem, 2.2vw, 1.32rem);
-  color: var(--ink-2); max-width: 46ch; line-height: 1.42;
+  font-size: clamp(1.06rem, 2.2vw, 1.38rem);
+  color: var(--ink-2); max-width: 62ch; line-height: 1.45;
   font-weight: 400;
 }
 .byline { margin-top: 2.4rem; max-width: var(--read); }
@@ -255,7 +308,7 @@ body.intro-done .figframe img { animation: card-in 1.15s cubic-bezier(.22,.9,.3,
 }
 figcaption {
   margin-top: .95rem; font-size: .855rem; line-height: 1.62;
-  color: var(--ink-3); max-width: 88ch;
+  color: var(--ink-3); max-width: 108ch;
 }
 figcaption b { color: var(--ink-2); font-weight: 600; }
 
@@ -342,7 +395,7 @@ body.hot-armed .hot.is-open { border-style: solid; }
 }
 .drawer[hidden] { display: none; }
 .drawer .cap {
-  font-size: .875rem; line-height: 1.6; color: var(--ink-2); max-width: 84ch;
+  font-size: .9rem; line-height: 1.68; color: var(--ink-2); max-width: 108ch;
   margin: 0 0 .85rem;
 }
 .drawer .cap b { color: var(--ink); font-weight: 700; }
@@ -387,7 +440,10 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 .sec-head { display: flex; align-items: baseline; gap: 1.1rem; margin-bottom: 2rem; }
 .sec-head h2 { font-size: clamp(1.5rem, 3.3vw, 2.05rem); letter-spacing: -0.015em; }
 .sec-head .eyebrow { flex: 0 0 auto; }
-.prose { max-width: var(--read); font-size: 1.005rem; color: var(--ink-2); display: grid; gap: 1.1rem; }
+/* Prose runs the full section column. At the 1140px wrap that is ~96
+   characters at this size, so the leading is opened up to carry the longer
+   line, and the size nudged with it. */
+.prose { max-width: var(--read); font-size: 1.03rem; line-height: 1.72; color: var(--ink-2); display: grid; gap: 1.15rem; }
 .prose strong { color: var(--ink); font-weight: 600; }
 
 /* ---------- stat strip ---------- */
@@ -500,10 +556,10 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 
 .sub-head { margin-top: 3.2rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
 .sub-head h3 { font-size: 1.06rem; font-weight: 600; letter-spacing: 0; margin-bottom: .55rem; }
-.sub-head p { font-size: .875rem; line-height: 1.68; color: var(--ink-2); max-width: 80ch; }
+.sub-head p { font-size: .9rem; line-height: 1.72; color: var(--ink-2); max-width: none; }
 
 .platesnote {
-  margin-top: 1.3rem; font-size: .8rem; line-height: 1.6; color: var(--ink-3); max-width: 78ch;
+  margin-top: 1.3rem; font-size: .82rem; line-height: 1.66; color: var(--ink-3); max-width: none;
 }
 
 /* ---------- paper figure plates ---------- */
@@ -559,14 +615,14 @@ tbody tr.hi td:first-child { font-weight: 600; }
   font-weight: 600; padding-top: .18rem;
 }
 .lesson h3 { font-size: 1.06rem; margin-bottom: .38rem; font-weight: 600; letter-spacing: 0; }
-.lesson p { font-size: .93rem; color: var(--ink-2); max-width: 76ch; }
+.lesson p { font-size: .95rem; line-height: 1.66; color: var(--ink-2); max-width: none; }
 @media (max-width: 560px) { .lesson { grid-template-columns: 1fr; gap: .4rem; } }
 
 /* ---------- callout ---------- */
 .callout {
   border-left: 3px solid var(--gold); background: var(--surface-sunk);
   padding: 1.35rem 1.5rem; border-radius: 0 3px 3px 0;
-  display: grid; gap: .55rem; max-width: 82ch;
+  display: grid; gap: .55rem;
 }
 .callout .big {
   font-family: var(--f-display); font-weight: 700; font-size: 1.62rem;
@@ -606,7 +662,7 @@ tbody tr.hi td:first-child { font-weight: 600; }
 /* ---------- footer ---------- */
 footer { padding: 3rem 0 4rem; }
 .foot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-footer p { font-size: .845rem; color: var(--ink-3); line-height: 1.68; max-width: 62ch; }
+footer p { font-size: .865rem; color: var(--ink-3); line-height: 1.7; max-width: 72ch; }
 footer .eyebrow { display: block; margin-bottom: .6rem; }
 </style>
 </head>
@@ -635,18 +691,37 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 
 <div class="intro" id="intro" role="presentation">
   <div class="intro-stage">
-    <div class="intro-word" aria-hidden="true">
-      <span style="animation-delay:.04s">O</span><span style="animation-delay:.10s">m</span><span style="animation-delay:.16s">n</span><span style="animation-delay:.22s">i</span><span style="animation-delay:.28s">R</span><span style="animation-delay:.34s">A</span><span style="animation-delay:.40s">S</span>
+    <div class="intro-top">
+      <div class="intro-word" aria-hidden="true">
+        <span style="animation-delay:.04s">O</span><span style="animation-delay:.10s">m</span><span style="animation-delay:.16s">n</span><span style="animation-delay:.22s">i</span><span style="animation-delay:.28s">R</span><span style="animation-delay:.34s">A</span><span style="animation-delay:.40s">S</span>
+      </div>
+      <div class="intro-dial">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="80" stroke="var(--rule)" stroke-width="20"></circle>
+          <circle class="arc" cx="100" cy="100" r="80" stroke="var(--gold)"      stroke-width="20" style="--len:80.99;  --d:.46s"></circle>
+          <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue)"      stroke-width="20" style="--len:174.70; --d:.58s; stroke-dashoffset:174.70; transform-origin:100px 100px; transform:rotate(58.008deg)"></circle>
+          <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue-soft)" stroke-width="20" style="--len:171.09; --d:.72s; stroke-dashoffset:171.09; transform-origin:100px 100px; transform:rotate(183.125deg)"></circle>
+          <circle class="arc" cx="100" cy="100" r="80" stroke="var(--ink-3)"     stroke-width="20" style="--len:73.60;  --d:.86s; stroke-dashoffset:73.60;  transform-origin:100px 100px; transform:rotate(305.660deg)"></circle>
+        </svg>
+        <div class="hub"><b>~2,650</b><em>hours video</em></div>
+      </div>
     </div>
-    <div class="intro-dial">
-      <svg viewBox="0 0 200 200" aria-hidden="true">
-        <circle cx="100" cy="100" r="80" stroke="var(--rule)" stroke-width="20"></circle>
-        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--gold)"      stroke-width="20" style="--len:80.99;  --d:.46s"></circle>
-        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue)"      stroke-width="20" style="--len:174.70; --d:.58s; stroke-dashoffset:174.70; transform-origin:100px 100px; transform:rotate(58.008deg)"></circle>
-        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue-soft)" stroke-width="20" style="--len:171.09; --d:.72s; stroke-dashoffset:171.09; transform-origin:100px 100px; transform:rotate(183.125deg)"></circle>
-        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--ink-3)"     stroke-width="20" style="--len:73.60;  --d:.86s; stroke-dashoffset:73.60;  transform-origin:100px 100px; transform:rotate(305.660deg)"></circle>
-      </svg>
-      <div class="hub"><b>~2,650</b><em>hours video</em></div>
+
+    <p class="intro-eyebrow">Standardizing foundation model training and evaluation in robot-assisted surgery</p>
+
+    <div class="intro-rule" aria-hidden="true"></div>
+
+    <div class="intro-figs" aria-hidden="true">
+      <div class="intro-fig" style="--d:1.28s"><b>51%</b><span>robotic</span></div>
+      <div class="intro-fig" style="--d:1.36s"><b>19</b><span>sources</span></div>
+      <div class="intro-fig" style="--d:1.44s"><b>256</b><span>nodes</span></div>
+      <div class="intro-fig" style="--d:1.52s"><b>6,144</b><span>batch</span></div>
+      <div class="intro-fig" style="--d:1.60s"><b>3,038</b><span>node-hours</span></div>
+      <div class="intro-fig" style="--d:1.68s"><b>254</b><span>runs</span></div>
+    </div>
+
+    <div class="intro-tasks" aria-hidden="true">
+      <i style="--d:1.86s">SAR-RARP50</i><i style="--d:1.93s">GraSP phases</i><i style="--d:2.00s">GraSP steps</i><i style="--d:2.07s">SARAS-ESAD</i><i style="--d:2.14s">OmniRAS-PR</i><i style="--d:2.21s">YT-Chole triplets</i>
     </div>
   </div>
   <button class="intro-skip" id="introSkip" type="button">Skip</button>
@@ -1017,7 +1092,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       </figure>
     </div>
 
-    <div class="prose" style="margin-top:2.4rem; max-width:82ch">
+    <div class="prose" style="margin-top:2.4rem">
       <p><strong>Adaptation matters more than substitution.</strong> OmniRAS benefits are most consistent
       once part of the backbone is allowed to adapt. Frozen comparisons are mixed, but partial fine-tuning
       improves over the corresponding raw initialization on both YT-Chole triplet scales, reverses the frozen
@@ -1060,7 +1135,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       </table>
     </div>
 
-    <div class="prose" style="margin-top:1.6rem; max-width:82ch">
+    <div class="prose" style="margin-top:1.6rem">
       <p>The longest production run yields the strongest transfer, but its catalog also changed, so the gain
       cannot be attributed to compute alone. The one matched-budget comparison — 9.22 M to 18.43 M samples
       under the same catalog and recipe — was approximately probe-neutral. We report the campaign as
@@ -1241,7 +1316,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     setTimeout(function () { intro.hidden = true; }, 700);
   }
 
-  var timer = setTimeout(end, 2450);
+  var timer = setTimeout(end, 3600);
   function bail() { clearTimeout(timer); end(); }
   skip.addEventListener('click', bail);
   intro.addEventListener('click', bail);
