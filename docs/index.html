@@ -9,69 +9,44 @@
 <meta property="og:description" content="Standardizing foundation model training and evaluation in robot-assisted surgery.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="static/images/omniras_overview.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
+/* Palette and type are taken directly from the paper's own figure style
+   (vjepa_paper/hist_style.py), so the page and the figures read as one system.
+   Single light theme by design: the paper is white-ground, and so is this. */
 :root {
   color-scheme: light;
-  --ground:        #f6f8fa;
+
+  /* grounds — all white, per the figures */
+  --ground:        #ffffff;
   --surface:       #ffffff;
-  --surface-sunk:  #eef2f6;
-  --ink:           #202c38;
+  --surface-sunk:  #e8edf2;   /* hist_style GRID */
+
+  /* ink */
+  --ink:           #202c38;   /* hist_style DARK  */
   --ink-2:         #4a5b6e;
-  --ink-3:         #7e90a5;
-  --rule:          #dbe3ec;
-  --rule-strong:   #b9c6d3;
-  --blue:          #2f6fb0;
-  --blue-soft:     #79a9d5;
-  --gold:          #c88c20;
-  --gold-soft:     #e1ae48;
-  --gold-ink:      #946515;
+  --ink-3:         #7e90a5;   /* hist_style MUTED */
+
+  /* rules */
+  --rule:          #e8edf2;   /* hist_style GRID */
+  --rule-strong:   #b9c6d3;   /* hist_style AXIS */
+
+  /* series */
+  --blue:          #2f6fb0;   /* hist_style BLUE_DARK  */
+  --blue-soft:     #79a9d5;   /* hist_style BLUE_LIGHT */
+  --gold:          #c88c20;   /* hist_style GOLD_DARK  */
+  --gold-soft:     #e1ae48;   /* hist_style GOLD_LIGHT */
+  --gold-ink:      #946515;   /* darkened for text-grade contrast */
+
   --focus:         #2f6fb0;
 
-  --f-display: "IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
-  --f-body:    "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
-  --f-mono:    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* The figures declare font.sans-serif = ["DejaVu Sans", "Arial", "Helvetica"].
+     Mirroring that exact stack means the page sets in the same face as the plots. */
+  --f-display: "DejaVu Sans", Verdana, Arial, Helvetica, sans-serif;
+  --f-body:    "DejaVu Sans", Verdana, Arial, Helvetica, sans-serif;
+  --f-mono:    "DejaVu Sans Mono", "Liberation Mono", Consolas, monospace;
 
   --wrap: 1140px;
   --read: 68ch;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --ground:       #11171e;
-    --surface:      #171f28;
-    --surface-sunk: #1e2833;
-    --ink:          #e6ecf3;
-    --ink-2:        #aebccd;
-    --ink-3:        #7e90a5;
-    --rule:         #2a3742;
-    --rule-strong:  #3d4d5c;
-    --blue:         #4a88c9;
-    --blue-soft:    #6fa3d8;
-    --gold:         #ba8722;
-    --gold-soft:    #d1a03a;
-    --gold-ink:     #d1a03a;
-    --focus:        #6fa3d8;
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --ground:       #11171e;
-  --surface:      #171f28;
-  --surface-sunk: #1e2833;
-  --ink:          #e6ecf3;
-  --ink-2:        #aebccd;
-  --ink-3:        #7e90a5;
-  --rule:         #2a3742;
-  --rule-strong:  #3d4d5c;
-  --blue:         #4a88c9;
-  --blue-soft:    #6fa3d8;
-  --gold:         #ba8722;
-  --gold-soft:    #d1a03a;
-  --gold-ink:     #d1a03a;
-  --focus:        #6fa3d8;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -85,33 +60,138 @@ body {
   background: var(--ground);
   color: var(--ink);
   font-family: var(--f-body);
-  font-size: 16.5px;
-  line-height: 1.62;
+  font-size: 15.5px;
+  line-height: 1.66;
   -webkit-font-smoothing: antialiased;
 }
 a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { color: var(--gold-ink); }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
 img { max-width: 100%; height: auto; display: block; }
-h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: -0.015em; }
 p { margin: 0; }
 
 .wrap { width: min(100% - 3rem, var(--wrap)); margin-inline: auto; }
 @media (max-width: 640px) { .wrap { width: calc(100% - 2rem); } }
 
 .eyebrow {
-  font-family: var(--f-mono);
-  font-size: .705rem;
-  font-weight: 500;
-  letter-spacing: .14em;
+  font-family: var(--f-display);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .13em;
   text-transform: uppercase;
   color: var(--ink-3);
+}
+
+/* ---------- intro overture ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 100;
+  background: #ffffff;
+  display: grid; place-items: center;
+  /* no transition here — the fade is driven by .intro.done */
+}
+.intro[hidden] { display: none; }
+.intro.done { opacity: 0; pointer-events: none; transition: opacity .62s ease; }
+.intro-stage {
+  display: grid; grid-template-columns: auto auto; align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.4rem);
+}
+.intro-word {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(2.6rem, 9vw, 6.4rem); line-height: .9;
+  letter-spacing: -0.03em; color: var(--ink);
+  display: flex;
+}
+.intro-word span {
+  display: inline-block;
+  transform: translateY(0.42em);
+  animation: word-in .62s cubic-bezier(.22,.9,.3,1) both;
+}
+@keyframes word-in { from { opacity: 0; transform: translateY(0.42em); } to { opacity: 1; transform: none; } }
+
+.intro-dial { position: relative; width: clamp(150px, 26vw, 232px); aspect-ratio: 1; }
+.intro-dial svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
+.intro-dial circle { fill: none; stroke-linecap: butt; }
+.intro-dial .arc {
+  stroke-dasharray: var(--len) 1000;
+  stroke-dashoffset: var(--len);
+  animation: arc-draw 1.15s cubic-bezier(.3,.8,.35,1) var(--d) both;
+}
+@keyframes arc-draw { to { stroke-dashoffset: 0; } }
+.intro-dial .hub {
+  position: absolute; inset: 0; display: grid; place-content: center;
+  text-align: center;
+  animation: hub-in .7s ease .95s both;
+}
+.intro-dial .hub b {
+  display: block; font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(1.5rem, 4.4vw, 2.3rem); letter-spacing: -0.02em;
+  color: var(--blue); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.intro-dial .hub em {
+  display: block; margin-top: .34rem; font-style: normal;
+  font-family: var(--f-mono); font-size: .615rem; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+@keyframes hub-in { from { opacity: 0; } to { opacity: 1; } }
+
+.intro-skip {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  background: none; border: 0; cursor: pointer; padding: .5rem 1rem;
+  font-family: var(--f-mono); font-size: .68rem; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--ink-3);
+  animation: hub-in .5s ease 1.5s both;
+}
+.intro-skip:hover { color: var(--blue); }
+
+/* the page assembling behind the curtain */
+body.is-intro { overflow: hidden; }
+.reveal > * { opacity: 0; }
+body.intro-done .reveal > * {
+  animation: rise .68s cubic-bezier(.22,.9,.3,1) forwards;
+}
+body.intro-done .reveal > :nth-child(1) { animation-delay: .04s; }
+body.intro-done .reveal > :nth-child(2) { animation-delay: .12s; }
+body.intro-done .reveal > :nth-child(3) { animation-delay: .20s; }
+body.intro-done .reveal > :nth-child(4) { animation-delay: .28s; }
+body.intro-done .reveal > :nth-child(5) { animation-delay: .36s; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* the model card resolving into place */
+.figframe { position: relative; }
+body.intro-done .figframe img { animation: card-in 1.15s cubic-bezier(.22,.9,.3,1) .34s backwards; }
+@keyframes card-in {
+  from { opacity: 0; transform: scale(1.035); filter: blur(7px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* honour reduced motion: no overture at all */
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none !important; }
+  .reveal > *, body.intro-done .reveal > * { opacity: 1 !important; animation: none !important; }
+  body.intro-done .figframe img { animation: none !important; }
+  body.is-intro { overflow: auto; }
+}
+
+/* ---------- institutional bar ---------- */
+.orgbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; padding: 1.15rem 0 1.05rem;
+  border-bottom: 1px solid var(--rule);
+}
+.orgbar img { display: block; width: auto; }
+.orgbar .uic { height: 34px; }
+.orgbar .anl { height: 40px; }
+@media (max-width: 560px) {
+  .orgbar { gap: 1rem; }
+  .orgbar .uic { height: 24px; }
+  .orgbar .anl { height: 28px; }
 }
 
 /* ---------- top bar ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 30;
-  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  background: color-mix(in srgb, #ffffff 90%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--rule);
 }
@@ -125,14 +205,6 @@ p { margin: 0; }
 }
 .topnav a:hover { color: var(--blue); }
 @media (max-width: 860px) { .topnav { display: none; } }
-.theme-btn {
-  margin-left: auto; background: none; border: 1px solid var(--rule-strong);
-  color: var(--ink-2); font-family: var(--f-mono); font-size: .68rem;
-  letter-spacing: .08em; text-transform: uppercase; padding: .3rem .6rem;
-  border-radius: 2px; cursor: pointer;
-}
-.topnav + .theme-btn { margin-left: 0; }
-.theme-btn:hover { border-color: var(--blue); color: var(--blue); }
 
 /* ---------- hero ---------- */
 .hero { padding: 4.5rem 0 2.75rem; border-bottom: 1px solid var(--rule); }
@@ -178,7 +250,7 @@ p { margin: 0; }
 /* ---------- figure ---------- */
 .figblock { padding: 2.75rem 0 0; }
 .figframe {
-  background: var(--surface); border: 1px solid var(--rule);
+  background: var(--surface); border: 1px solid var(--rule-strong);
   border-radius: 3px; padding: .5rem; overflow-x: auto;
 }
 .figframe img { min-width: 720px; }
@@ -219,7 +291,7 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 /* ---------- dataset cards ---------- */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 1.35rem; }
 .card {
-  background: var(--surface); border: 1px solid var(--rule);
+  background: var(--surface); border: 1px solid var(--rule-strong);
   border-top: 2px solid var(--gold); border-radius: 3px;
   padding: 1.6rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 1rem;
 }
@@ -250,8 +322,8 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 .sw.base { background: var(--blue); }
 .axis-note { font-family: var(--f-mono); font-size: .715rem; color: var(--ink-3); letter-spacing: .04em; margin-left: auto; }
 
-.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(345px, 1fr)); gap: 1.6rem; }
-.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 1.25rem 1.3rem 1.35rem; }
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; }
+.panel { background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 3px; padding: 1.25rem 1.3rem 1.35rem; }
 .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .3rem; }
 .panel h3 { font-size: 1.02rem; letter-spacing: 0; font-weight: 600; }
 .panel .metric { font-family: var(--f-mono); font-size: .685rem; color: var(--ink-3); letter-spacing: .01em; margin-top: .22rem; text-wrap: balance; }
@@ -261,9 +333,9 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
   border: 1px solid var(--gold); border-radius: 2px; padding: .12rem .4rem;
 }
 .bars { margin-top: 1.05rem; display: grid; gap: .42rem; }
-.bar-row { display: grid; grid-template-columns: 108px 1fr 46px; align-items: center; gap: .6rem; }
+.bar-row { display: grid; grid-template-columns: 124px 1fr 44px; align-items: center; gap: .55rem; }
 .bar-row .name {
-  font-size: .775rem; color: var(--ink-2); text-align: right;
+  font-size: .745rem; color: var(--ink-2); text-align: right;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .bar-row.is-ours .name { color: var(--ink); font-weight: 600; }
@@ -271,14 +343,14 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 .fill { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--blue); }
 .bar-row.is-ours .fill { background: var(--gold); }
 .bar-row .val {
-  font-family: var(--f-mono); font-size: .795rem; color: var(--ink);
+  font-family: var(--f-mono); font-size: .765rem; color: var(--ink);
   font-variant-numeric: tabular-nums; text-align: right;
 }
 .bar-row.is-ours .val { font-weight: 600; }
-@media (max-width: 420px) { .bar-row { grid-template-columns: 84px 1fr 42px; } }
+@media (max-width: 420px) { .bar-row { grid-template-columns: 96px 1fr 40px; } }
 
 /* ---------- table ---------- */
-.tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+.tablewrap { overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--surface); }
 table { border-collapse: collapse; width: 100%; font-size: .875rem; min-width: 580px; }
 caption { text-align: left; padding: 1rem 1.15rem .3rem; font-size: .855rem; color: var(--ink-3); }
 th, td { padding: .62rem 1.15rem; text-align: left; border-bottom: 1px solid var(--rule); }
@@ -308,7 +380,7 @@ tbody tr.hi td:first-child { font-weight: 600; }
 
 /* ---------- callout ---------- */
 .callout {
-  border-left: 2px solid var(--gold); background: var(--surface);
+  border-left: 3px solid var(--gold); background: var(--surface-sunk);
   padding: 1.35rem 1.5rem; border-radius: 0 3px 3px 0;
   display: grid; gap: .55rem; max-width: 82ch;
 }
@@ -335,7 +407,7 @@ tbody tr.hi td:first-child { font-weight: 600; }
 
 /* ---------- bibtex ---------- */
 .bib {
-  background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--surface-sunk); border: 1px solid var(--rule); border-radius: 3px;
   padding: 1.15rem 1.3rem; overflow-x: auto; margin-top: .4rem;
 }
 .bib pre { margin: 0; font-family: var(--f-mono); font-size: .795rem; line-height: 1.72; color: var(--ink-2); }
@@ -356,6 +428,13 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 </head>
 <body>
 
+<div class="wrap orgbar">
+  <img class="uic" src="static/images/logo_uic.png" width="1200" height="230"
+       alt="University of Illinois Chicago">
+  <img class="anl" src="static/images/logo_argonne.png" width="1087" height="300"
+       alt="Argonne National Laboratory">
+</div>
+
 <div class="topbar">
   <div class="wrap topbar-in">
     <a class="mark" href="#top">OmniRAS</a>
@@ -367,14 +446,32 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       <a href="#release">Release</a>
       <a href="#cite">Cite</a>
     </nav>
-    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle colour theme">Theme</button>
   </div>
+</div>
+
+<div class="intro" id="intro" role="presentation">
+  <div class="intro-stage">
+    <div class="intro-word" aria-hidden="true">
+      <span style="animation-delay:.04s">O</span><span style="animation-delay:.10s">m</span><span style="animation-delay:.16s">n</span><span style="animation-delay:.22s">i</span><span style="animation-delay:.28s">R</span><span style="animation-delay:.34s">A</span><span style="animation-delay:.40s">S</span>
+    </div>
+    <div class="intro-dial">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="80" stroke="var(--rule)" stroke-width="20"></circle>
+        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--gold)"      stroke-width="20" style="--len:80.99;  --d:.46s"></circle>
+        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue)"      stroke-width="20" style="--len:174.70; --d:.58s; stroke-dashoffset:174.70; transform-origin:100px 100px; transform:rotate(58.008deg)"></circle>
+        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--blue-soft)" stroke-width="20" style="--len:171.09; --d:.72s; stroke-dashoffset:171.09; transform-origin:100px 100px; transform:rotate(183.125deg)"></circle>
+        <circle class="arc" cx="100" cy="100" r="80" stroke="var(--ink-3)"     stroke-width="20" style="--len:73.60;  --d:.86s; stroke-dashoffset:73.60;  transform-origin:100px 100px; transform:rotate(305.660deg)"></circle>
+      </svg>
+      <div class="hub"><b>~2,650</b><em>hours video</em></div>
+    </div>
+  </div>
+  <button class="intro-skip" id="introSkip" type="button">Skip</button>
 </div>
 
 <main id="top">
 
 <header class="hero">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="eyebrow">A JEPA catalog in robot-assisted surgery</span>
     <h1>OmniRAS</h1>
     <p class="standfirst">Standardizing foundation model training and evaluation in robot-assisted surgery.</p>
@@ -828,21 +925,46 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 
 <script>
 (function () {
-  var root = document.documentElement;
-  var btn = document.getElementById('themeToggle');
-  var stored = null;
-  try { stored = localStorage.getItem('omniras-theme'); } catch (e) {}
-  if (stored === 'dark' || stored === 'light') root.setAttribute('data-theme', stored);
+  var intro = document.getElementById('intro');
+  var skip  = document.getElementById('introSkip');
+  var body  = document.body;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  btn.addEventListener('click', function () {
-    var isDark = root.getAttribute('data-theme') === 'dark' ||
-      (!root.hasAttribute('data-theme') &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches);
-    var next = isDark ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('omniras-theme', next); } catch (e) {}
-  });
+  var seen = false;
+  try { seen = sessionStorage.getItem('omniras-intro') === '1'; } catch (e) {}
 
+  // Deep link, repeat visit, or reduced motion: no overture.
+  if (reduced || seen || (location.hash && location.hash !== '#top')) {
+    intro.hidden = true;
+    body.classList.add('intro-done');
+    return;
+  }
+
+  body.classList.add('is-intro');
+  var ended = false;
+  function end() {
+    if (ended) return;
+    ended = true;
+    try { sessionStorage.setItem('omniras-intro', '1'); } catch (e) {}
+    intro.classList.add('done');
+    body.classList.remove('is-intro');
+    body.classList.add('intro-done');
+    setTimeout(function () { intro.hidden = true; }, 700);
+  }
+
+  var timer = setTimeout(end, 2450);
+  function bail() { clearTimeout(timer); end(); }
+  skip.addEventListener('click', bail);
+  intro.addEventListener('click', bail);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') bail();
+  }, { once: true });
+  // Any attempt to scroll means they want the page, not the overture.
+  window.addEventListener('wheel', bail, { once: true, passive: true });
+  window.addEventListener('touchstart', bail, { once: true, passive: true });
+})();
+
+(function () {
   var copy = document.getElementById('copyBib');
   copy.addEventListener('click', function () {
     var text = document.getElementById('bibtex').textContent;
