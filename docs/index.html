@@ -312,6 +312,11 @@ figcaption b { color: var(--ink-2); font-weight: 600; }
 }
 .hot:hover::after, .hot:focus-visible::after { opacity: 1; }
 .hot.is-open {
+  background: color-mix(in srgb, var(--blue) 10%, transparent);
+  border-color: var(--blue);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blue) 30%, transparent);
+}
+.hot.is-pinned {
   background: color-mix(in srgb, var(--gold) 14%, transparent);
   border-color: var(--gold);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 40%, transparent);
@@ -325,35 +330,48 @@ body.hot-armed .hot {
 body.hot-armed .hot:hover, body.hot-armed .hot:focus-visible,
 body.hot-armed .hot.is-open { border-style: solid; }
 
-/* the detail drawer under the figure */
+/* The panel under the figure is set like a table in the paper: hairline
+   booktabs rules, a bold-lead-in caption, tabular figures, the best row
+   in bold. No card, no chips — the same furniture the PDF uses. */
 .drawer {
-  border: 1px solid var(--rule-strong); border-top: 2px solid var(--gold);
-  border-radius: 0 0 3px 3px; background: var(--surface-sunk);
-  padding: 1.1rem 1.3rem 1.2rem; margin-top: -1px;
-  animation: drawer-in .3s cubic-bezier(.22,.9,.3,1);
+  background: var(--surface); border: 0;
+  border-top: 1.6px solid var(--ink);
+  border-bottom: 1.6px solid var(--ink);
+  padding: .9rem 0 1rem; margin-top: 1.2rem;
+  min-height: 21rem;
 }
-@keyframes drawer-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 .drawer[hidden] { display: none; }
-.drawer-head { display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap; margin-bottom: .5rem; }
-.drawer-head h3 { font-size: 1.02rem; letter-spacing: -.005em; }
-.drawer-head .tagline {
-  font-family: var(--f-mono); font-size: .69rem; color: var(--ink-3); letter-spacing: .03em;
+.drawer .cap {
+  font-size: .875rem; line-height: 1.6; color: var(--ink-2); max-width: 84ch;
+  margin: 0 0 .85rem;
 }
-.drawer-head .close {
-  margin-left: auto; background: none; border: 0; cursor: pointer;
-  font-family: var(--f-mono); font-size: .665rem; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--ink-3); padding: .2rem .1rem;
+.drawer .cap b { color: var(--ink); font-weight: 700; }
+.drawer .cap i {
+  font-style: normal; font-family: var(--f-mono);
+  font-size: .715rem; color: var(--ink-3); letter-spacing: .02em;
 }
-.drawer-head .close:hover { color: var(--blue); }
-.drawer p { font-size: .885rem; line-height: 1.62; color: var(--ink-2); max-width: 86ch; }
-.drawer .kv { display: flex; flex-wrap: wrap; gap: .38rem; margin-top: .8rem; }
-.drawer .kv span {
-  font-family: var(--f-mono); font-size: .705rem; padding: .25rem .52rem;
-  background: var(--surface); border: 1px solid var(--rule-strong);
-  border-radius: 2px; color: var(--ink); white-space: nowrap;
+.ptab-wrap { overflow-x: auto; }
+.ptab {
+  border-collapse: collapse; font-size: .84rem;
+  font-variant-numeric: tabular-nums;
+  width: 100%; max-width: 34rem;
 }
-.drawer .kv span b { color: var(--ink-3); font-weight: 400; }
-.drawer .kv span.lead { border-color: var(--gold); }
+.ptab th, .ptab td { padding: .3rem 1.6rem .3rem 0; text-align: left; }
+.ptab td.num { text-align: right; padding-right: 0; white-space: nowrap; }
+.ptab thead th {
+  font-weight: 600; font-size: .715rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-3);
+  border-bottom: 1px solid var(--rule-strong); padding-bottom: .34rem;
+}
+.ptab thead th.num { text-align: right; }
+.ptab tbody tr:first-child td { padding-top: .42rem; }
+.ptab tbody tr.lead td { font-weight: 700; color: var(--ink); }
+.ptab tbody td { color: var(--ink-2); }
+@media (max-width: 620px) {
+  .drawer { min-height: 0; }
+  .ptab { font-size: .78rem; min-width: 20rem; }
+  .ptab th, .ptab td { padding-right: .9rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .figblock { transition: none; }
@@ -616,7 +634,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 <div class="wrap figblock" id="figblock">
   <figure>
     <div class="card-toolbar">
-      <span class="hint">Hover a region to name it &middot; click to expand the numbers behind it &middot; Esc closes</span>
+      <span class="hint">Hover any region of the card to read it below &middot; click to pin, Esc to release</span>
       <button class="card-btn" id="cardRegions" type="button" aria-pressed="false">Show regions</button>
       <button class="card-btn" id="cardWide" type="button" aria-pressed="false">Widen</button>
     </div>
@@ -641,14 +659,16 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       </div>
     </div>
 
-    <div class="drawer" id="drawer" hidden role="region" aria-live="polite">
-      <div class="drawer-head">
-        <h3 id="drawerTitle"></h3>
-        <span class="tagline" id="drawerTag"></span>
-        <button class="close" id="drawerClose" type="button">Close</button>
+    <div class="drawer" id="drawer" role="region" aria-live="polite">
+      <div id="drawerPane">
+        <p class="cap"><b id="drawerTitle"></b> <i id="drawerTag"></i> <span id="drawerBody"></span></p>
+        <div class="ptab-wrap">
+        <table class="ptab">
+          <thead><tr><th id="drawerCol0"></th><th class="num" id="drawerCol1"></th></tr></thead>
+          <tbody id="drawerRows"></tbody>
+        </table>
+        </div>
       </div>
-      <p id="drawerBody"></p>
-      <div class="kv" id="drawerKv"></div>
     </div>
 
     <figcaption>
@@ -1115,127 +1135,178 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 })();
 
 /* ---- interactive model card ------------------------------------------
-   Every figure in the drawer is taken from the paper text; nothing is
-   rounded up or invented. Hover names a region, click opens its numbers. */
+   Hovering a region is enough: the panel below the figure fills in with
+   that region's numbers, set the way the paper sets a table. Every value
+   is from the paper text; nothing is rounded up or invented. */
 (function () {
-  var stage  = document.getElementById('hotspots');
+  var stage = document.getElementById('hotspots');
   if (!stage) return;
-  var drawer = document.getElementById('drawer');
+  var pane   = document.getElementById('drawerPane');
   var dTitle = document.getElementById('drawerTitle');
   var dTag   = document.getElementById('drawerTag');
   var dBody  = document.getElementById('drawerBody');
-  var dKv    = document.getElementById('drawerKv');
-  var close  = document.getElementById('drawerClose');
+  var dRows  = document.getElementById('drawerRows');
+  var dCol0  = document.getElementById('drawerCol0');
+  var dCol1  = document.getElementById('drawerCol1');
   var wideBtn = document.getElementById('cardWide');
   var regBtn  = document.getElementById('cardRegions');
   var block   = document.getElementById('figblock');
 
   var DATA = {
+    summary: {
+      t: 'Cross-task synthesis.',
+      g: '6 task families · 254 seed-level runs',
+      b: 'Across the downstream suite OmniRAS reaches the strongest measured result in every surgical task family considered, and exceeds the published SAR-RARP50 reference, the best SARAS-ESAD challenge submission, and TAPIS on both GraSP phase and step recognition. Move the pointer over any region of the card above to read the numbers behind it.',
+      c: ['Benchmark', 'OmniRAS best'],
+      k: [['SAR-RARP50, F1@10', '91.56 ± 0.25'], ['GraSP phases, mAP', '85.34 ± 0.33'], ['GraSP steps, mAP', '57.85 ± 1.29'], ['SARAS-ESAD, AP mean', '0.2319 ± 0.0199'], ['OmniRAS-PR, frame-F1', '47.92 ± 0.53'], ['YT-Chole, IVT mAP', '39.92 ± 0.91']]
+    },
     corpus: {
-      t: 'Pretraining corpus',
+      t: 'Pretraining corpus.',
       g: '~2,650 h · 19 sources',
       b: 'Continued pretraining runs over a 19-source surgical-video catalog of roughly 2,650 hours. The catalog is majority robotic by hours, which is the property that separates it from the general laparoscopic corpora used by prior surgical foundation models. The gold arc is the private da Vinci collection contributed by this work.',
-      k: [['robotic', '51% · 1,348 h'], ['mixed surgical', '34% · 902 h'], ['laparoscopic', '15% · 388 h'], ['ours, private', '427 h', 1]]
+      c: ['Family', 'Share · hours'],
+      k: [['Robotic', '51% · 1,348 h', 1], ['Mixed surgical', '34% · 902 h'], ['Laparoscopic', '15% · 388 h'], ['of which ours, private', '427 h']]
     },
     sources: {
-      t: 'Catalog composition',
+      t: 'Catalog composition.',
       g: '19 sources · 12 largest named',
       b: 'Hours are pooled across three families. Robotic video comes from our private collection plus surgvu24, surgtoolloc2022, surgenet_robotic and grasp; the mixed-surgical block is the YouTube-scraped lemon corpus; the laparoscopic block covers cholec80, multibypass140, surgenet_lap, gynsurg, lapgyn6_events and heichole.',
-      k: [['robotic sources', '5'], ['mixed surgical', '1'], ['laparoscopic', '6'], ['largest single source', 'lemon · 902 h']]
+      c: ['Family', 'Sources'],
+      k: [['Robotic', '5'], ['Mixed surgical', '1'], ['Laparoscopic', '6'], ['Largest single source', 'lemon · 902 h', 1]]
     },
     campaign: {
-      t: 'Pretraining campaign',
+      t: 'Pretraining campaign.',
       g: '3 production runs · 3,038 node-hours',
       b: 'Three production continued-pretraining runs at up to 256 nodes with a global batch of 6,144, plus exploratory screening over budget, catalog composition, sampling and masking objective. The longest configuration transfers best, though budget and catalog are not fully disentangled, so the campaign is reported as practical guidance rather than a scaling law.',
-      k: [['9.22M samples', '30 ep · 438 node-h'], ['18.43M samples', '60 ep · 872 node-h'], ['36.86M samples', '200 ep · 1,728 node-h', 1], ['downstream runs', '254 · 109 partial-FT']]
+      c: ['Run', 'Epochs · node-hours'],
+      k: [['9.22 M samples', '30 · 438'], ['18.43 M samples', '60 · 872'], ['36.86 M samples', '200 · 1,728', 1], ['Downstream runs', '254 · 109 partial-FT']]
     },
     ytchole: {
-      t: 'YT-Chole Triplets',
+      t: 'YT-Chole Triplets.',
       g: 'Dataset 02 · public video, re-annotated',
       b: 'Public cholecystectomy video re-annotated for multi-label action triplets ⟨tool, verb, target⟩ over ten procedures. Annotation reliability was measured rather than assumed: at a ±1 s tolerance Krippendorff’s α is 0.917 for the tool axis, with verb and target lower, which is the expected ordering for this ontology.',
-      k: [['procedures', '10'], ['classes', '5 tools · 6 verbs · 12 targets'], ['annotated video', '~6.4 h'], ['clips train / test', '3,537 / 1,696'], ['α tool @±1 s', '0.917']]
+      c: ['Property', 'Value'],
+      k: [['Procedures', '10'], ['Classes', '5 tools · 6 verbs · 12 targets'], ['Annotated video', '~6.4 h'], ['Clips, train / test', '3,537 / 1,696'], ['α tool @ ±1 s', '0.917', 1]]
     },
     pr: {
-      t: 'OmniRAS-PR',
+      t: 'OmniRAS-PR.',
       g: 'Dataset 01 · phase recognition',
       b: 'Fifty-one robotic-cholecystectomy procedures annotated into eleven surgical phases: 41 from our private collection plus phase annotation of 10 public SurgeNet procedures. Inter-rater agreement rises from κ 0.664 exact to 0.741 at ±2 s and 0.807 at ±4 s, and 82.1% of disagreement sits inside the Calot’s-triangle cluster.',
-      k: [['procedures', '51 · 41 private + 10 public'], ['phases', '11'], ['annotated video', '~11.1 h'], ['private clips', '156,217 / 41,108'], ['κ exact → ±4 s', '0.664 → 0.807']]
+      c: ['Property', 'Value'],
+      k: [['Procedures', '51 · 41 private + 10 public'], ['Phases', '11'], ['Annotated video', '~11.1 h'], ['Private clips, train / test', '156,217 / 41,108'], ['κ exact → ±4 s', '0.664 → 0.807', 1]]
     },
     sar: {
-      t: 'SAR-RARP50',
+      t: 'SAR-RARP50.',
       g: 'Frame-wise action recognition · F1@10',
-      b: 'Official test split. Under frozen probing every billion-scale video encoder already clears the published 84.10 reference; full fine-tuning of the 36.86M-sample OmniRAS 2B checkpoint takes it to the strongest result in the table, a 7.46-point gain in segmental F1@10 over that reference.',
-      k: [['OmniRAS 2B, full FT', '91.56 ± 0.25', 1], ['OmniRAS 2B, FT4', '90.88 ± 0.09'], ['frame-macro accuracy', '83.86 ± 0.16'], ['published reference', '84.10'], ['LemonFM / EndoViT / SurgeNet-XL', '75.0 / 69.8 / 68.1']]
+      b: 'Official test split. Under frozen probing every billion-scale video encoder already clears the published 84.10 reference; full fine-tuning of the 36.86 M-sample OmniRAS 2B checkpoint takes it to the strongest result in the table, a 7.46-point gain in segmental F1@10 over that reference.',
+      c: ['Encoder / config', 'F1@10'],
+      k: [['OmniRAS 2B, full FT', '91.56 ± 0.25', 1], ['OmniRAS 2B, FT last-4', '90.88 ± 0.09'], ['Published reference', '84.10'], ['LemonFM', '75.0'], ['EndoViT', '69.8'], ['SurgeNet-XL', '68.1']]
     },
     gphase: {
-      t: 'GraSP — phases',
+      t: 'GraSP, phases.',
       g: 'Surgical phase · mAP',
       b: 'Evaluated as an out-of-the-box transfer of the SAR-RARP50 head, with no task-specific tuning on the GraSP test set. Full fine-tuning gives the highest phase mAP in the table, 8.62 points above TAPIS.',
-      k: [['OmniRAS 2B, full FT', '85.34 ± 0.33', 1], ['macro-F1', '79.22 ± 0.34'], ['OmniRAS 2B, FT4', '83.41 ± 0.63'], ['TAPIS', '76.72'], ['LemonFM FT4 / SurgeNet-XL', '75.37 / 67.58']]
+      c: ['Encoder / config', 'Phase mAP'],
+      k: [['OmniRAS 2B, full FT', '85.34 ± 0.33', 1], ['OmniRAS 2B, FT last-4', '83.41 ± 0.63'], ['TAPIS', '76.72'], ['LemonFM FT last-4', '75.37 ± 0.31'], ['SurgeNet-XL', '67.58 ± 1.47']]
     },
     gstep: {
-      t: 'GraSP — steps',
+      t: 'GraSP, steps.',
       g: 'Surgical step · mAP',
       b: 'The same benchmark exposes a trade-off: aggressive adaptation specializes the representation toward coarse workflow phases and step mAP collapses to 38.91 under full fine-tuning. Restricting adaptation to the last four blocks preserves the finer temporal distinctions and gives the best step result, 5.84 points over TAPIS.',
-      k: [['OmniRAS 2B, FT4', '57.85 ± 1.29', 1], ['OmniRAS 2B, full FT', '38.91 ± 1.04'], ['TAPIS', '52.01'], ['LemonFM FT4 / SurgeNet-XL', '48.56 / 45.35']]
+      c: ['Encoder / config', 'Step mAP'],
+      k: [['OmniRAS 2B, FT last-4', '57.85 ± 1.29', 1], ['OmniRAS 2B, full FT', '38.91 ± 1.04'], ['TAPIS', '52.01'], ['LemonFM FT last-4', '48.56 ± 1.27'], ['SurgeNet-XL', '45.35 ± 0.67']]
     },
     esad: {
-      t: 'SARAS-ESAD',
+      t: 'SARAS-ESAD.',
       g: 'Action detection · AP mean',
       b: 'Last-four-block adaptation with augmentation. Augmentation is applied to our models only and adds about +0.028 AP mean on top of FT4, indicating headroom the no-augmentation baselines do not yet exploit. The result exceeds the best challenge submission on every detection AP metric.',
-      k: [['OmniRAS 2B, FT4 + aug', '0.2319 ± 0.0199', 1], ['FT4, no aug', '0.2035 ± 0.0132'], ['frozen', '0.1793 ± 0.0083'], ['AP10 / AP50', '0.3262 / 0.1127'], ['best challenge submission', '0.1928']]
+      c: ['Encoder / config', 'AP mean'],
+      k: [['OmniRAS 2B, FT last-4 + aug', '0.2319 ± 0.0199', 1], ['OmniRAS 2B, FT last-4', '0.2035 ± 0.0132'], ['OmniRAS 2B, frozen', '0.1793 ± 0.0083'], ['Best challenge submission', '0.1928'], ['AP10 / AP50, ours', '0.3262 / 0.1127']]
     },
     prres: {
-      t: 'OmniRAS-PR — result',
+      t: 'OmniRAS-PR, result.',
       g: 'Phase recognition · frame-F1',
       b: 'Surgical pretraining shows most clearly here. Frozen OmniRAS 2B lifts frame-F1 from 23.76 to 44.89 against the raw Meta initialization; under matched last-four-block adaptation it reaches 47.92, and it also leads every segmental metric.',
-      k: [['OmniRAS 2B, FT4', '47.92 ± 0.53', 1], ['phase mAP', '61.11 ± 0.85'], ['F1@10 / @25 / @50', '67.15 / 64.66 / 59.76'], ['SurgeNet-XL / LemonFM / EndoViT', '36.6 / 34.9 / 25.6']]
+      c: ['Encoder / config', 'Frame-F1'],
+      k: [['OmniRAS 2B, FT last-4', '47.92 ± 0.53', 1], ['Phase mAP, same model', '61.11 ± 0.85'], ['F1@10 / @25 / @50', '67.15 / 64.66 / 59.76'], ['SurgeNet-XL', '36.6'], ['LemonFM', '34.9'], ['EndoViT', '25.6']]
     },
     ivt: {
-      t: 'YT-Chole — result',
+      t: 'YT-Chole, result.',
       g: 'Action triplet ⟨i,v,t⟩ · IVT mAP',
-      b: 'Depth of adaptation matters more than anywhere else in the suite: FT4 on the 36.86M checkpoint reaches 37.68 and extending to the last eight blocks reaches the overall best, 39.92. Target recognition carries the remaining headroom.',
-      k: [['OmniRAS 2B, FT8', '39.92 ± 0.91', 1], ['OmniRAS 2B, FT4', '37.68 ± 0.23'], ['tool / verb / target AP', '93.71 / 85.32 / 61.25'], ['SurgeNet-XL / LemonFM / EndoViT', '26.0 / 21.4 / 9.1']]
+      b: 'Depth of adaptation matters more than anywhere else in the suite: FT4 on the 36.86 M checkpoint reaches 37.68 and extending to the last eight blocks reaches the overall best, 39.92. Target recognition carries the remaining headroom.',
+      c: ['Encoder / config', 'IVT mAP'],
+      k: [['OmniRAS 2B, FT last-8', '39.92 ± 0.91', 1], ['OmniRAS 2B, FT last-4', '37.68 ± 0.23'], ['Tool / verb / target AP', '93.71 / 85.32 / 61.25'], ['SurgeNet-XL', '26.0'], ['LemonFM FT last-4', '21.4'], ['EndoViT', '9.1']]
     }
   };
 
-  var current = null;
+  var current = null, pinned = null, leaveT = null;
 
-  function open(btn) {
-    var d = DATA[btn.dataset.k];
-    if (!d) return;
+  function paint(btn) {
+    var d = btn ? DATA[btn.dataset.k] : DATA.summary;
+    if (!d || (btn && current === btn)) return;
     if (current) current.classList.remove('is-open');
-    if (current === btn) { current = null; drawer.hidden = true; return; }
-    current = btn; btn.classList.add('is-open');
+    current = btn;
+    if (btn) btn.classList.add('is-open');
+
     dTitle.textContent = d.t;
     dTag.textContent   = d.g;
-    dBody.textContent  = d.b;
-    dKv.textContent    = '';
-    d.k.forEach(function (pair) {
-      var el = document.createElement('span');
-      if (pair[2]) el.className = 'lead';
-      var lab = document.createElement('b');
-      lab.textContent = pair[0] + '  ';
-      el.appendChild(lab);
-      el.appendChild(document.createTextNode(pair[1]));
-      dKv.appendChild(el);
+    dBody.textContent  = ' ' + d.b;
+    dCol0.textContent  = d.c[0];
+    dCol1.textContent  = d.c[1];
+    dRows.textContent  = '';
+    d.k.forEach(function (row) {
+      var tr = document.createElement('tr');
+      if (row[2]) tr.className = 'lead';
+      var td0 = document.createElement('td'); td0.textContent = row[0];
+      var td1 = document.createElement('td'); td1.className = 'num'; td1.textContent = row[1];
+      tr.appendChild(td0); tr.appendChild(td1); dRows.appendChild(tr);
     });
-    drawer.hidden = false;
   }
 
-  function shut() {
+  function clear() {
+    if (pinned) return;
     if (current) current.classList.remove('is-open');
-    current = null; drawer.hidden = true;
+    current = null;
+    paint(null);
   }
 
+  stage.addEventListener('pointerover', function (e) {
+    var btn = e.target.closest('.hot');
+    if (!btn) return;
+    clearTimeout(leaveT);
+    paint(btn);
+  });
+  stage.addEventListener('pointerout', function (e) {
+    if (e.relatedTarget && stage.contains(e.relatedTarget)) return;
+    clearTimeout(leaveT);
+    leaveT = setTimeout(clear, 260);          /* brief grace on the way out */
+  });
+
+  /* Click pins the panel so it survives the pointer leaving; click again
+     (or Escape) unpins. Focus does the same job for the keyboard. */
   stage.addEventListener('click', function (e) {
     var btn = e.target.closest('.hot');
-    if (btn) open(btn);
+    if (!btn) return;
+    if (pinned === btn) { pinned = null; btn.classList.remove('is-pinned'); return; }
+    if (pinned) pinned.classList.remove('is-pinned');
+    pinned = btn; btn.classList.add('is-pinned');
+    paint(btn);
   });
-  close.addEventListener('click', function () { var b = current; shut(); if (b) b.focus(); });
+  stage.addEventListener('focusin', function (e) {
+    var btn = e.target.closest('.hot');
+    if (btn) { clearTimeout(leaveT); paint(btn); }
+  });
+  stage.addEventListener('focusout', function (e) {
+    if (e.relatedTarget && stage.contains(e.relatedTarget)) return;
+    leaveT = setTimeout(clear, 260);
+  });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !drawer.hidden) shut();
+    if (e.key !== 'Escape') return;
+    if (pinned) { pinned.classList.remove('is-pinned'); pinned = null; }
+    clear();
   });
+
+  paint(null);
 
   regBtn.addEventListener('click', function () {
     var on = document.body.classList.toggle('hot-armed');
