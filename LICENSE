@@ -1,0 +1,44 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 the OmniRAS authors.
+
+This license applies to the contents of this repository as published here: the
+project page under docs/, the manuscript PDF, figures, and documentation.
+
+You are free to:
+
+  Share  — copy and redistribute the material in any medium or format
+  Adapt  — remix, transform, and build upon the material for any purpose,
+           including commercially
+
+under the following terms:
+
+  Attribution — You must give appropriate credit, provide a link to the license,
+  and indicate if changes were made. You may do so in any reasonable manner, but
+  not in any way that suggests the licensor endorses you or your use.
+
+  No additional restrictions — You may not apply legal terms or technological
+  measures that legally restrict others from doing anything the license permits.
+
+Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+SCOPE AND EXCLUSIONS
+
+This license does NOT extend to artifacts that are not distributed in this
+repository and whose release is governed separately:
+
+  * The OmniRAS-PR and YT-Chole Triplet datasets. These were constructed under
+    two separate IRB-approved protocols. Their release will follow the
+    corresponding institutional, privacy, and data-use requirements, and will
+    carry their own data-use agreement.
+
+  * Surgical video from any source, including the third-party corpora used
+    during pretraining, which remain under their original licenses and terms.
+
+  * Model checkpoints, which will be released under their own terms.
+
+  * Evaluation and training code, which will be released under a separate
+    software license.
+
+If you cite this work, please see CITATION.cff.

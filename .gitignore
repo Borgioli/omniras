@@ -1,0 +1,32 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Large local data — never commit video or checkpoints
+*.mp4
+*.mkv
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+data/
+checkpoints/

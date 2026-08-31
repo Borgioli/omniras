@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "If you use OmniRAS, please cite the following paper."
+title: "OmniRAS: Standardizing Foundation Model Training and Evaluation in Robot-Assisted Surgery"
+abstract: >-
+  OmniRAS is a family of 1B- and 2B-parameter V-JEPA-2.1 encoders for robot-assisted
+  surgery. The work releases two densely annotated robotic-cholecystectomy datasets
+  (OmniRAS-PR for phase recognition and a multi-label YT-Chole tool-verb-target task),
+  documents continued pretraining at up to 256 compute nodes over roughly 2,650 hours of
+  surgical video from 19 sources, and evaluates against raw V-JEPA-2.1 and specialized
+  surgical models across six tasks under frozen-encoder and partial fine-tuning regimes.
+type: article
+year: 2026
+license: CC-BY-4.0
+keywords:
+  - robot-assisted surgery
+  - surgical data science
+  - foundation models
+  - self-supervised learning
+  - V-JEPA
+  - surgical phase recognition
+  - action triplet recognition
+authors:
+  - family-names: Borgioli
+    given-names: Leonardo
+    affiliation: "Department of Electrical and Computer Engineering, University of Illinois Chicago"
+  - family-names: Getty
+    given-names: Neil
+    affiliation: "Argonne National Laboratory, Lemont, IL, USA"
+  - family-names: Xiu
+    given-names: Wenli
+    affiliation: "Affiliated Hospital of Qingdao University, Qingdao, China"
+  - family-names: Cassiani
+    given-names: Jessica
+    affiliation: "Department of Surgery, University of Illinois Chicago"
+  - family-names: Ducas
+    given-names: Alvaro
+    affiliation: "Department of Surgery, University of Illinois Chicago"
+  - family-names: Orda
+    given-names: Carlos Agustin
+    affiliation: "Department of Surgery, University of Illinois Chicago"
+  - family-names: Waris
+    given-names: Hira
+    affiliation: "Department of Surgery, University of Illinois Chicago"
+  - family-names: Xia
+    given-names: Fangfang
+    affiliation: "Argonne National Laboratory, Lemont, IL, USA"
+  - family-names: Stevens
+    given-names: Rick
+    affiliation: "Argonne National Laboratory, Lemont, IL, USA"
+  - family-names: Giulianotti
+    given-names: Pier Cristoforo
+    affiliation: "Department of Surgery, University of Illinois Chicago"
+  - family-names: Zefran
+    given-names: Milos
+    affiliation: "Department of Electrical and Computer Engineering, University of Illinois Chicago"
