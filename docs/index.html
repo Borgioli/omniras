@@ -442,6 +442,14 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 .sw { width: 22px; height: 9px; border-radius: 2px; flex: 0 0 auto; }
 .sw.ours { background: var(--gold); }
 .sw.base { background: var(--blue); }
+.sw.err-key {
+  height: 9px; width: 16px; box-sizing: border-box; background: transparent; position: relative;
+  border-left: 1.5px solid var(--ink); border-right: 1.5px solid var(--ink); border-radius: 0;
+}
+.sw.err-key::before {
+  content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1.5px;
+  background: var(--ink); transform: translateY(-50%);
+}
 .axis-note { font-family: var(--f-mono); font-size: .715rem; color: var(--ink-3); letter-spacing: .04em; margin-left: auto; }
 
 .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; }
@@ -455,21 +463,75 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
   border: 1px solid var(--gold); border-radius: 2px; padding: .12rem .4rem;
 }
 .bars { margin-top: 1.05rem; display: grid; gap: .42rem; }
-.bar-row { display: grid; grid-template-columns: 124px 1fr 44px; align-items: center; gap: .55rem; }
+.bar-row { display: grid; grid-template-columns: 118px 1fr 92px; align-items: center; gap: .55rem; }
 .bar-row .name {
   font-size: .745rem; color: var(--ink-2); text-align: right;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .bar-row.is-ours .name { color: var(--ink); font-weight: 600; }
-.track { display: block; background: var(--surface-sunk); border-radius: 2px; height: 15px; overflow: hidden; }
+.track {
+  display: block; position: relative; background: var(--surface-sunk);
+  border-radius: 2px; height: 17px; overflow: hidden;
+}
 .fill { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--blue); }
 .bar-row.is-ours .fill { background: var(--gold); }
+/* Three-seed +/- std, drawn to the same 0-100 scale as the bar. The spans are
+   deliberately not widened to a minimum: a tight seed spread should look tight. */
+/* Whiskers run the full height of the track so they read as ticks rather than
+   as a smudge on the fill. Spans are drawn to true scale and never widened to
+   a minimum: a 0.25-point seed spread should look like a hairline, and does. */
+.err { position: absolute; top: 0; bottom: 0; }
+.err::before, .err::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--ink);
+}
+.err::before { left: 0; }
+.err::after  { right: 0; }
+.err > i {
+  position: absolute; top: 50%; left: 0; right: 0; height: 1.5px;
+  background: var(--ink); transform: translateY(-50%);
+}
 .bar-row .val {
   font-family: var(--f-mono); font-size: .765rem; color: var(--ink);
-  font-variant-numeric: tabular-nums; text-align: right;
+  font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
 }
 .bar-row.is-ours .val { font-weight: 600; }
-@media (max-width: 420px) { .bar-row { grid-template-columns: 96px 1fr 40px; } }
+.bar-row .sd { color: var(--ink-3); font-weight: 400; font-size: .69rem; }
+@media (max-width: 420px) { .bar-row { grid-template-columns: 88px 1fr 84px; } }
+
+.sub-head { margin-top: 3.2rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
+.sub-head h3 { font-size: 1.06rem; font-weight: 600; letter-spacing: 0; margin-bottom: .55rem; }
+.sub-head p { font-size: .875rem; line-height: 1.68; color: var(--ink-2); max-width: 80ch; }
+
+.platesnote {
+  margin-top: 1.3rem; font-size: .8rem; line-height: 1.6; color: var(--ink-3); max-width: 78ch;
+}
+
+/* ---------- paper figure plates ---------- */
+.plates { display: grid; gap: 2.6rem; margin-top: 2.8rem; }
+.plate { margin: 0; }
+.plate .platehead {
+  display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap;
+  margin-bottom: .6rem;
+}
+.plate .platehead h3 { font-size: .95rem; font-weight: 600; letter-spacing: 0; }
+.plate .platehead .metric {
+  font-family: var(--f-mono); font-size: .675rem; color: var(--ink-3); letter-spacing: .01em;
+}
+.plate .platehead .full {
+  margin-left: auto; font-family: var(--f-mono); font-size: .655rem;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3);
+  text-decoration: none; border-bottom: 1px solid var(--rule-strong);
+}
+.plate .platehead .full:hover { color: var(--blue); border-bottom-color: var(--blue); }
+.plate .frame {
+  background: var(--surface); border: 1px solid var(--rule-strong);
+  border-radius: 3px; padding: .55rem; overflow-x: auto; line-height: 0;
+}
+.plate .frame img { display: block; width: 100%; height: auto; }
+/* The two portrait-ish plates are constrained as a whole figure, head and
+   caption included, so the "open full size" link stays over its own frame. */
+.plate.tall { max-width: 720px; }
+.plate figcaption { margin-top: .7rem; font-size: .825rem; }
 
 /* ---------- table ---------- */
 .tablewrap { overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--surface); }
@@ -801,7 +863,8 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     <div class="legend">
       <span class="lg"><span class="sw ours"></span> OmniRAS (ours)</span>
       <span class="lg"><span class="sw base"></span> Baselines &amp; published systems</span>
-      <span class="axis-note">All panels 0–100 · value labelled on every bar</span>
+      <span class="lg"><span class="sw err-key"></span> ± 1 s.d. over three seeds</span>
+      <span class="axis-note">All panels 0–100 · mean ± std labelled on every bar</span>
     </div>
 
     <div class="panels">
@@ -811,10 +874,10 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
           <span class="delta">+16.6</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT full</span><span class="track"><span class="fill" style="width:91.6%"></span></span><span class="val">91.6</span></div>
-          <div class="bar-row"><span class="name">LemonFM</span><span class="track"><span class="fill" style="width:75.0%"></span></span><span class="val">75.0</span></div>
-          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:69.8%"></span></span><span class="val">69.8</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:68.1%"></span></span><span class="val">68.1</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT full</span><span class="track"><span class="fill" style="width:91.56%"></span><span class="err" style="left:91.31%;width:0.50%"><i></i></span></span><span class="val">91.56 <span class="sd">± 0.25</span></span></div>
+          <div class="bar-row"><span class="name">LemonFM</span><span class="track"><span class="fill" style="width:74.99%"></span><span class="err" style="left:74.31%;width:1.36%"><i></i></span></span><span class="val">74.99 <span class="sd">± 0.68</span></span></div>
+          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:69.78%"></span><span class="err" style="left:69.42%;width:0.72%"><i></i></span></span><span class="val">69.78 <span class="sd">± 0.36</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:68.11%"></span><span class="err" style="left:67.20%;width:1.82%"><i></i></span></span><span class="val">68.11 <span class="sd">± 0.91</span></span></div>
         </div>
       </article>
 
@@ -824,10 +887,10 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
           <span class="delta">+8.6</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT full</span><span class="track"><span class="fill" style="width:85.3%"></span></span><span class="val">85.3</span></div>
-          <div class="bar-row"><span class="name">TAPIS</span><span class="track"><span class="fill" style="width:76.7%"></span></span><span class="val">76.7</span></div>
-          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:75.4%"></span></span><span class="val">75.4</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:67.6%"></span></span><span class="val">67.6</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT full</span><span class="track"><span class="fill" style="width:85.34%"></span><span class="err" style="left:85.01%;width:0.66%"><i></i></span></span><span class="val">85.34 <span class="sd">± 0.33</span></span></div>
+          <div class="bar-row"><span class="name">TAPIS</span><span class="track"><span class="fill" style="width:76.72%"></span></span><span class="val">76.72</span></div>
+          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:75.37%"></span><span class="err" style="left:75.06%;width:0.62%"><i></i></span></span><span class="val">75.37 <span class="sd">± 0.31</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:67.58%"></span><span class="err" style="left:66.11%;width:2.94%"><i></i></span></span><span class="val">67.58 <span class="sd">± 1.47</span></span></div>
         </div>
       </article>
 
@@ -837,23 +900,23 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
           <span class="delta">+5.8</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:57.9%"></span></span><span class="val">57.9</span></div>
-          <div class="bar-row"><span class="name">TAPIS</span><span class="track"><span class="fill" style="width:52.0%"></span></span><span class="val">52.0</span></div>
-          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:48.6%"></span></span><span class="val">48.6</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:45.4%"></span></span><span class="val">45.4</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:57.85%"></span><span class="err" style="left:56.56%;width:2.58%"><i></i></span></span><span class="val">57.85 <span class="sd">± 1.29</span></span></div>
+          <div class="bar-row"><span class="name">TAPIS</span><span class="track"><span class="fill" style="width:52.01%"></span></span><span class="val">52.01</span></div>
+          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:48.56%"></span><span class="err" style="left:47.29%;width:2.54%"><i></i></span></span><span class="val">48.56 <span class="sd">± 1.27</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:45.35%"></span><span class="err" style="left:44.68%;width:1.34%"><i></i></span></span><span class="val">45.35 <span class="sd">± 0.67</span></span></div>
         </div>
       </article>
 
       <article class="panel">
         <div class="panel-head">
-          <div><h3>SARAS-ESAD</h3><div class="metric">Detection · AP<sub>m</sub> · FT4 + aug</div></div>
+          <div><h3>SARAS-ESAD</h3><div class="metric">Detection · AP<sub>m</sub> × 100 · FT4 + aug</div></div>
           <span class="delta">+3.9</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:23.2%"></span></span><span class="val">23.2</span></div>
-          <div class="bar-row"><span class="name">Challenge best</span><span class="track"><span class="fill" style="width:19.3%"></span></span><span class="val">19.3</span></div>
-          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:15.9%"></span></span><span class="val">15.9</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL FT4</span><span class="track"><span class="fill" style="width:12.6%"></span></span><span class="val">12.6</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:23.19%"></span><span class="err" style="left:21.20%;width:3.98%"><i></i></span></span><span class="val">23.19 <span class="sd">± 1.99</span></span></div>
+          <div class="bar-row"><span class="name">Challenge best</span><span class="track"><span class="fill" style="width:19.28%"></span></span><span class="val">19.28</span></div>
+          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:15.85%"></span><span class="err" style="left:15.46%;width:0.78%"><i></i></span></span><span class="val">15.85 <span class="sd">± 0.39</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL FT4</span><span class="track"><span class="fill" style="width:12.56%"></span><span class="err" style="left:12.24%;width:0.64%"><i></i></span></span><span class="val">12.56 <span class="sd">± 0.32</span></span></div>
         </div>
       </article>
 
@@ -863,10 +926,10 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
           <span class="delta">+11.3</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:47.9%"></span></span><span class="val">47.9</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:36.6%"></span></span><span class="val">36.6</span></div>
-          <div class="bar-row"><span class="name">LemonFM</span><span class="track"><span class="fill" style="width:34.9%"></span></span><span class="val">34.9</span></div>
-          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:25.6%"></span></span><span class="val">25.6</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT4</span><span class="track"><span class="fill" style="width:47.92%"></span><span class="err" style="left:47.39%;width:1.06%"><i></i></span></span><span class="val">47.92 <span class="sd">± 0.53</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:36.59%"></span><span class="err" style="left:33.88%;width:5.42%"><i></i></span></span><span class="val">36.59 <span class="sd">± 2.71</span></span></div>
+          <div class="bar-row"><span class="name">LemonFM</span><span class="track"><span class="fill" style="width:34.94%"></span><span class="err" style="left:33.51%;width:2.86%"><i></i></span></span><span class="val">34.94 <span class="sd">± 1.43</span></span></div>
+          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:25.63%"></span><span class="err" style="left:21.30%;width:8.66%"><i></i></span></span><span class="val">25.63 <span class="sd">± 4.33</span></span></div>
         </div>
       </article>
 
@@ -876,12 +939,82 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
           <span class="delta">+13.9</span>
         </div>
         <div class="bars">
-          <div class="bar-row is-ours"><span class="name">OmniRAS FT8</span><span class="track"><span class="fill" style="width:39.9%"></span></span><span class="val">39.9</span></div>
-          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:26.0%"></span></span><span class="val">26.0</span></div>
-          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:21.4%"></span></span><span class="val">21.4</span></div>
-          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:9.1%"></span></span><span class="val">9.1</span></div>
+          <div class="bar-row is-ours"><span class="name">OmniRAS FT8</span><span class="track"><span class="fill" style="width:39.92%"></span><span class="err" style="left:39.01%;width:1.82%"><i></i></span></span><span class="val">39.92 <span class="sd">± 0.91</span></span></div>
+          <div class="bar-row"><span class="name">SurgeNet-XL</span><span class="track"><span class="fill" style="width:26.03%"></span><span class="err" style="left:25.87%;width:0.32%"><i></i></span></span><span class="val">26.03 <span class="sd">± 0.16</span></span></div>
+          <div class="bar-row"><span class="name">LemonFM FT4</span><span class="track"><span class="fill" style="width:21.35%"></span><span class="err" style="left:21.29%;width:0.12%"><i></i></span></span><span class="val">21.35 <span class="sd">± 0.06</span></span></div>
+          <div class="bar-row"><span class="name">EndoViT</span><span class="track"><span class="fill" style="width:9.14%"></span><span class="err" style="left:9.00%;width:0.28%"><i></i></span></span><span class="val">9.14 <span class="sd">± 0.14</span></span></div>
         </div>
       </article>
+    </div>
+
+    <p class="platesnote">Bars without a whisker are single published numbers with no seed
+    spread reported by their authors: the SAR-RARP50 reference (84.10, not shown above), TAPIS, and the
+    best SARAS-ESAD challenge submission.</p>
+
+
+    <div class="sub-head">
+      <h3>The complete figures from the paper</h3>
+      <p>The panels above compress each benchmark to one representative metric. Below are the paper's own
+      result figures in full: every encoder configuration, every metric, and the three-seed standard
+      deviation drawn on each bar. Gold marks the best bar in a panel, solid blue a fine-tuned
+      configuration, grey a frozen probe or external baseline.</p>
+    </div>
+
+    <div class="plates">
+      <figure class="plate tall">
+        <div class="platehead">
+          <h3>SAR-RARP50</h3><span class="metric">Fig. 6 · segmental F₁@10 and frame-macro F₁</span>
+          <a class="full" href="static/images/hist_sar.png" target="_blank" rel="noopener">Open full size</a>
+        </div>
+        <div class="frame">
+          <img src="static/images/hist_sar.png" width="2372" height="1922" loading="lazy" alt="Two horizontal bar panels for SAR-RARP50, segmental F1@10 and frame-macro F1, sixteen encoder configurations each, with three-seed error bars.">
+        </div>
+        <figcaption><b>SAR-RARP50 action recognition, official test split.</b> Every billion-scale video encoder already clears the published 84.10 reference under frozen probing; full fine-tuning of the 36.86 M-sample OmniRAS 2B checkpoint gives the strongest result in both panels. Error bars are the three-seed standard deviation; the published reference reports none.</figcaption>
+      </figure>
+
+      <figure class="plate tall">
+        <div class="platehead">
+          <h3>GraSP</h3><span class="metric">Fig. 10 · phase and step, mAP and F₁</span>
+          <a class="full" href="static/images/hist_grasp.png" target="_blank" rel="noopener">Open full size</a>
+        </div>
+        <div class="frame">
+          <img src="static/images/hist_grasp.png" width="2372" height="3114" loading="lazy" alt="Four horizontal bar panels for GraSP: phase mAP, phase F1, step mAP and step F1, with three-seed error bars.">
+        </div>
+        <figcaption><b>GraSP phase and step recognition.</b> The two optima fall under different adaptation regimes: full fine-tuning leads phase recognition, while last-four-block fine-tuning leads step recognition and full fine-tuning drops to 38.91 step mAP. TAPIS is a single published number and carries no error bar.</figcaption>
+      </figure>
+
+      <figure class="plate">
+        <div class="platehead">
+          <h3>OmniRAS-PR</h3><span class="metric">Fig. 8 · six frame-wise and segmental metrics</span>
+          <a class="full" href="static/images/hist_pr.png" target="_blank" rel="noopener">Open full size</a>
+        </div>
+        <div class="frame">
+          <img src="static/images/hist_pr.png" width="2671" height="1635" loading="lazy" alt="Six horizontal bar panels for OmniRAS-PR: phase F1, phase mAP, segmental F1@10, F1@25, F1@50 and edit score, with three-seed error bars.">
+        </div>
+        <figcaption><b>OmniRAS-PR phase recognition and temporal segmentation.</b> Frame-F₁ and phase mAP measure per-frame discrimination; F₁@10/25/50 and the edit score additionally penalise fragmented predictions. The adapted configurations occupy the top of every ranking. Error bars are the three-seed standard deviation.</figcaption>
+      </figure>
+
+      <figure class="plate">
+        <div class="platehead">
+          <h3>YT-Chole Triplets</h3><span class="metric">Fig. 7 · joint IVT and the three component axes</span>
+          <a class="full" href="static/images/hist_triplets.png" target="_blank" rel="noopener">Open full size</a>
+        </div>
+        <div class="frame">
+          <img src="static/images/hist_triplets.png" width="2671" height="1635" loading="lazy" alt="Five horizontal bar panels for YT-Chole triplet recognition: joint IVT mAP, tool, verb, target, and the mean of the three axes, with three-seed error bars.">
+        </div>
+        <figcaption><b>YT-Chole action-triplet recognition.</b> Joint ⟨tool, verb, target⟩ mAP alongside the three component axes. Depth of adaptation matters more here than anywhere else in the suite: extending fine-tuning from the last four to the last eight blocks lifts joint IVT mAP from 37.68 to 39.92. Target recognition carries the remaining headroom.</figcaption>
+      </figure>
+
+      <figure class="plate">
+        <div class="platehead">
+          <h3>SARAS-ESAD</h3><span class="metric">Fig. 9 · detection AP and bounding-box metrics</span>
+          <a class="full" href="static/images/hist_esad.png" target="_blank" rel="noopener">Open full size</a>
+        </div>
+        <div class="frame">
+          <img src="static/images/hist_esad.png" width="2671" height="1954" loading="lazy" alt="Six horizontal bar panels for SARAS-ESAD: AP mean, AP10, AP50, presence mAP, mean IoU and box mAP@50, each with three-seed error bars.">
+        </div>
+        <figcaption><b>SARAS-ESAD action detection, common-population rescoring.</b> Last-four-block adaptation with augmentation leads AP<sub>mean</sub>, AP10 and AP50, above the best challenge submission on each. Augmentation is applied to our models only. The challenge submission is a single published number with no seed spread.</figcaption>
+      </figure>
     </div>
 
     <div class="prose" style="margin-top:2.4rem; max-width:82ch">
@@ -1200,7 +1333,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       g: 'Frame-wise action recognition · F1@10',
       b: 'Official test split. Under frozen probing every billion-scale video encoder already clears the published 84.10 reference; full fine-tuning of the 36.86 M-sample OmniRAS 2B checkpoint takes it to the strongest result in the table, a 7.46-point gain in segmental F1@10 over that reference.',
       c: ['Encoder / config', 'F1@10'],
-      k: [['OmniRAS 2B, full FT', '91.56 ± 0.25', 1], ['OmniRAS 2B, FT last-4', '90.88 ± 0.09'], ['Published reference', '84.10'], ['LemonFM', '75.0'], ['EndoViT', '69.8'], ['SurgeNet-XL', '68.1']]
+      k: [['OmniRAS 2B, full FT', '91.56 ± 0.25', 1], ['OmniRAS 2B, FT last-4', '90.88 ± 0.09'], ['Published reference', '84.10'], ['LemonFM', '74.99 ± 0.68'], ['EndoViT', '69.78 ± 0.36'], ['SurgeNet-XL', '68.11 ± 0.91']]
     },
     gphase: {
       t: 'GraSP, phases.',
@@ -1221,21 +1354,21 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       g: 'Action detection · AP mean',
       b: 'Last-four-block adaptation with augmentation. Augmentation is applied to our models only and adds about +0.028 AP mean on top of FT4, indicating headroom the no-augmentation baselines do not yet exploit. The result exceeds the best challenge submission on every detection AP metric.',
       c: ['Encoder / config', 'AP mean'],
-      k: [['OmniRAS 2B, FT last-4 + aug', '0.2319 ± 0.0199', 1], ['OmniRAS 2B, FT last-4', '0.2035 ± 0.0132'], ['OmniRAS 2B, frozen', '0.1793 ± 0.0083'], ['Best challenge submission', '0.1928'], ['AP10 / AP50, ours', '0.3262 / 0.1127']]
+      k: [['OmniRAS 2B, FT last-4 + aug', '0.2319 ± 0.0199', 1], ['OmniRAS 2B, FT last-4', '0.2035 ± 0.0132'], ['OmniRAS 2B, frozen', '0.1793 ± 0.0083'], ['Best challenge submission', '0.1928'], ['AP10, ours', '0.3262 ± 0.0084'], ['AP50, ours', '0.1127 ± 0.0303']]
     },
     prres: {
       t: 'OmniRAS-PR, result.',
       g: 'Phase recognition · frame-F1',
       b: 'Surgical pretraining shows most clearly here. Frozen OmniRAS 2B lifts frame-F1 from 23.76 to 44.89 against the raw Meta initialization; under matched last-four-block adaptation it reaches 47.92, and it also leads every segmental metric.',
       c: ['Encoder / config', 'Frame-F1'],
-      k: [['OmniRAS 2B, FT last-4', '47.92 ± 0.53', 1], ['Phase mAP, same model', '61.11 ± 0.85'], ['F1@10 / @25 / @50', '67.15 / 64.66 / 59.76'], ['SurgeNet-XL', '36.6'], ['LemonFM', '34.9'], ['EndoViT', '25.6']]
+      k: [['OmniRAS 2B, FT last-4', '47.92 ± 0.53', 1], ['Phase mAP, same model', '61.11 ± 0.85'], ['F1@10, same model', '67.15 ± 0.78'], ['SurgeNet-XL, frozen', '36.59 ± 2.71'], ['LemonFM, frozen', '34.94 ± 1.43'], ['EndoViT, frozen', '25.63 ± 4.33']]
     },
     ivt: {
       t: 'YT-Chole, result.',
       g: 'Action triplet ⟨i,v,t⟩ · IVT mAP',
       b: 'Depth of adaptation matters more than anywhere else in the suite: FT4 on the 36.86 M checkpoint reaches 37.68 and extending to the last eight blocks reaches the overall best, 39.92. Target recognition carries the remaining headroom.',
       c: ['Encoder / config', 'IVT mAP'],
-      k: [['OmniRAS 2B, FT last-8', '39.92 ± 0.91', 1], ['OmniRAS 2B, FT last-4', '37.68 ± 0.23'], ['Tool / verb / target AP', '93.71 / 85.32 / 61.25'], ['SurgeNet-XL', '26.0'], ['LemonFM FT last-4', '21.4'], ['EndoViT', '9.1']]
+      k: [['OmniRAS 2B, FT last-8', '39.92 ± 0.91', 1], ['OmniRAS 2B, FT last-4', '37.68 ± 0.23'], ['Tool AP, ours', '93.71 ± 0.44'], ['Target AP, ours', '61.25 ± 0.25'], ['SurgeNet-XL', '26.03 ± 0.16'], ['LemonFM FT last-4', '21.35 ± 0.06'], ['EndoViT', '9.14 ± 0.14']]
     }
   };
 
