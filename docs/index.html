@@ -253,12 +253,116 @@ body.intro-done .figframe img { animation: card-in 1.15s cubic-bezier(.22,.9,.3,
   background: var(--surface); border: 1px solid var(--rule-strong);
   border-radius: 3px; padding: .5rem; overflow-x: auto;
 }
-.figframe img { min-width: 720px; }
 figcaption {
   margin-top: .95rem; font-size: .855rem; line-height: 1.62;
   color: var(--ink-3); max-width: 88ch;
 }
 figcaption b { color: var(--ink-2); font-weight: 600; }
+
+/* ---------- interactive model card ---------- */
+/* Hotspots are positioned in per-cent of the figure, so they stay locked to the
+   artwork at any width. The rects come from probing the PNG for its own rules:
+   the tile strip's full-height dividers, the horizontal rules at 10.6 / 64.2 /
+   68.7 / 95.9 %, and the corpus|benchmarks divider at 41.7 %. */
+.figblock { transition: width .45s cubic-bezier(.22,.9,.3,1); }
+.figblock.wide { width: min(100% - 2rem, 1720px); }
+
+.card-toolbar {
+  display: flex; align-items: baseline; gap: .9rem;
+  margin-bottom: .75rem; flex-wrap: wrap;
+}
+.card-toolbar .hint {
+  font-family: var(--f-mono); font-size: .695rem; letter-spacing: .035em;
+  color: var(--ink-3); margin-right: auto;
+}
+.card-btn {
+  font-family: var(--f-mono); font-size: .665rem; letter-spacing: .09em;
+  text-transform: uppercase; padding: .34rem .68rem; cursor: pointer;
+  background: transparent; border: 1px solid var(--rule-strong);
+  color: var(--ink-2); border-radius: 2px;
+}
+.card-btn:hover { border-color: var(--blue); color: var(--blue); }
+.card-btn[aria-pressed="true"] {
+  border-color: var(--blue); color: #fff; background: var(--blue);
+}
+
+.figframe { position: relative; }
+.figstage { position: relative; display: block; line-height: 0; min-width: 720px; }
+.figstage img { width: 100%; min-width: 0; height: auto; }
+
+.hotspots { position: absolute; inset: 0; }
+.hot {
+  position: absolute; margin: 0; padding: 0; cursor: pointer;
+  background: transparent; border: 1px solid transparent; border-radius: 2px;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.hot::after {                                  /* label chip, on hover only */
+  content: attr(data-label);
+  position: absolute; left: 50%; bottom: 100%; transform: translate(-50%, -5px);
+  font-family: var(--f-mono); font-size: .655rem; letter-spacing: .05em;
+  line-height: 1.5; white-space: nowrap; padding: .2rem .48rem; border-radius: 2px;
+  background: var(--ink); color: #fff; opacity: 0; pointer-events: none; z-index: 3;
+  transition: opacity .18s ease;
+}
+.hot:hover, .hot:focus-visible {
+  background: color-mix(in srgb, var(--blue) 10%, transparent);
+  border-color: var(--blue);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blue) 30%, transparent);
+  outline: none;
+}
+.hot:hover::after, .hot:focus-visible::after { opacity: 1; }
+.hot.is-open {
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+.hot.round { border-radius: 50%; }
+body.hot-armed .hot {
+  background: color-mix(in srgb, var(--blue) 6%, transparent);
+  border-color: color-mix(in srgb, var(--blue) 48%, transparent);
+  border-style: dashed;
+}
+body.hot-armed .hot:hover, body.hot-armed .hot:focus-visible,
+body.hot-armed .hot.is-open { border-style: solid; }
+
+/* the detail drawer under the figure */
+.drawer {
+  border: 1px solid var(--rule-strong); border-top: 2px solid var(--gold);
+  border-radius: 0 0 3px 3px; background: var(--surface-sunk);
+  padding: 1.1rem 1.3rem 1.2rem; margin-top: -1px;
+  animation: drawer-in .3s cubic-bezier(.22,.9,.3,1);
+}
+@keyframes drawer-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.drawer[hidden] { display: none; }
+.drawer-head { display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.drawer-head h3 { font-size: 1.02rem; letter-spacing: -.005em; }
+.drawer-head .tagline {
+  font-family: var(--f-mono); font-size: .69rem; color: var(--ink-3); letter-spacing: .03em;
+}
+.drawer-head .close {
+  margin-left: auto; background: none; border: 0; cursor: pointer;
+  font-family: var(--f-mono); font-size: .665rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-3); padding: .2rem .1rem;
+}
+.drawer-head .close:hover { color: var(--blue); }
+.drawer p { font-size: .885rem; line-height: 1.62; color: var(--ink-2); max-width: 86ch; }
+.drawer .kv { display: flex; flex-wrap: wrap; gap: .38rem; margin-top: .8rem; }
+.drawer .kv span {
+  font-family: var(--f-mono); font-size: .705rem; padding: .25rem .52rem;
+  background: var(--surface); border: 1px solid var(--rule-strong);
+  border-radius: 2px; color: var(--ink); white-space: nowrap;
+}
+.drawer .kv span b { color: var(--ink-3); font-weight: 400; }
+.drawer .kv span.lead { border-color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .figblock { transition: none; }
+  .drawer { animation: none; }
+}
+@media (max-width: 760px) {
+  .hot::after { display: none; }
+  .card-toolbar .hint { width: 100%; margin: 0 0 .15rem; }
+}
 
 /* ---------- section frame ---------- */
 section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
@@ -509,12 +613,44 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
   </div>
 </header>
 
-<div class="wrap figblock">
+<div class="wrap figblock" id="figblock">
   <figure>
-    <div class="figframe">
-      <img src="static/images/omniras_overview.png" width="3273" height="1743"
-           alt="OmniRAS overview. Left: the pretraining corpus, about 2,650 hours across 18 sources — 51% robotic, 34% mixed surgical, 15% laparoscopic. Centre: the two densely annotated benchmarks released with this work, YT-Chole Triplets and OmniRAS-PR. Bottom: headline results on six surgical benchmarks, with OmniRAS leading each panel.">
+    <div class="card-toolbar">
+      <span class="hint">Hover a region to name it &middot; click to expand the numbers behind it &middot; Esc closes</span>
+      <button class="card-btn" id="cardRegions" type="button" aria-pressed="false">Show regions</button>
+      <button class="card-btn" id="cardWide" type="button" aria-pressed="false">Widen</button>
     </div>
+
+    <div class="figframe">
+      <div class="figstage">
+        <img src="static/images/omniras_overview.png" width="3273" height="1743"
+             alt="OmniRAS overview. Left: the pretraining corpus, about 2,650 hours across 19 sources — 51% robotic, 34% mixed surgical, 15% laparoscopic. Right: the two densely annotated benchmarks released with this work, YT-Chole Triplets and OmniRAS-PR. Bottom: headline results on six surgical benchmarks, with OmniRAS leading each panel.">
+        <div class="hotspots" id="hotspots">
+          <button class="hot round" data-k="corpus"   data-label="Pretraining corpus" aria-label="Pretraining corpus" style="left:2.903%;top:25.416%;width:13.321%;height:25.014%"></button>
+          <button class="hot"       data-k="sources"  data-label="19 catalog sources" aria-label="19 catalog sources" style="left:17.812%;top:20.195%;width:22.273%;height:35.571%"></button>
+          <button class="hot"       data-k="campaign" data-label="Campaign scale" aria-label="Campaign scale"     style="left:1.589%;top:58.864%;width:37.886%;height:4.590%"></button>
+          <button class="hot"       data-k="ytchole"  data-label="YT-Chole Triplets" aria-label="YT-Chole Triplets"  style="left:43.202%;top:15.777%;width:55.240%;height:31.957%"></button>
+          <button class="hot"       data-k="pr"       data-label="OmniRAS-PR" aria-label="OmniRAS-PR"         style="left:43.202%;top:48.078%;width:55.240%;height:15.261%"></button>
+          <button class="hot" data-k="sar"    data-label="SAR-RARP50" aria-label="SAR-RARP50"        style="left:1.848%;top:68.70%;width:15.475%;height:27.23%"></button>
+          <button class="hot" data-k="gphase" data-label="GraSP Phases" aria-label="GraSP Phases"      style="left:18.026%;top:68.70%;width:15.429%;height:27.23%"></button>
+          <button class="hot" data-k="gstep"  data-label="GraSP Steps" aria-label="GraSP Steps"       style="left:34.158%;top:68.70%;width:15.460%;height:27.23%"></button>
+          <button class="hot" data-k="esad"   data-label="SARAS-ESAD" aria-label="SARAS-ESAD"        style="left:50.321%;top:68.70%;width:15.490%;height:27.23%"></button>
+          <button class="hot" data-k="prres"  data-label="OmniRAS-PR result" aria-label="OmniRAS-PR result" style="left:66.514%;top:68.70%;width:15.414%;height:27.23%"></button>
+          <button class="hot" data-k="ivt"    data-label="YT-Chole result" aria-label="YT-Chole result"   style="left:82.631%;top:68.70%;width:15.475%;height:27.23%"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer" id="drawer" hidden role="region" aria-live="polite">
+      <div class="drawer-head">
+        <h3 id="drawerTitle"></h3>
+        <span class="tagline" id="drawerTag"></span>
+        <button class="close" id="drawerClose" type="button">Close</button>
+      </div>
+      <p id="drawerBody"></p>
+      <div class="kv" id="drawerKv"></div>
+    </div>
+
     <figcaption>
       <b>Overview.</b> Billion-scale V-JEPA-2.1 encoders are continued-pretrained at up to 256 nodes on a
       19-source, approximately 2,650-hour surgical-video catalog that is 51% da Vinci robotic video by hours,
@@ -975,6 +1111,140 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
       copy.textContent = 'Press ⌘C';
       setTimeout(function () { copy.textContent = 'Copy BibTeX'; }, 1800);
     });
+  });
+})();
+
+/* ---- interactive model card ------------------------------------------
+   Every figure in the drawer is taken from the paper text; nothing is
+   rounded up or invented. Hover names a region, click opens its numbers. */
+(function () {
+  var stage  = document.getElementById('hotspots');
+  if (!stage) return;
+  var drawer = document.getElementById('drawer');
+  var dTitle = document.getElementById('drawerTitle');
+  var dTag   = document.getElementById('drawerTag');
+  var dBody  = document.getElementById('drawerBody');
+  var dKv    = document.getElementById('drawerKv');
+  var close  = document.getElementById('drawerClose');
+  var wideBtn = document.getElementById('cardWide');
+  var regBtn  = document.getElementById('cardRegions');
+  var block   = document.getElementById('figblock');
+
+  var DATA = {
+    corpus: {
+      t: 'Pretraining corpus',
+      g: '~2,650 h · 19 sources',
+      b: 'Continued pretraining runs over a 19-source surgical-video catalog of roughly 2,650 hours. The catalog is majority robotic by hours, which is the property that separates it from the general laparoscopic corpora used by prior surgical foundation models. The gold arc is the private da Vinci collection contributed by this work.',
+      k: [['robotic', '51% · 1,348 h'], ['mixed surgical', '34% · 902 h'], ['laparoscopic', '15% · 388 h'], ['ours, private', '427 h', 1]]
+    },
+    sources: {
+      t: 'Catalog composition',
+      g: '19 sources · 12 largest named',
+      b: 'Hours are pooled across three families. Robotic video comes from our private collection plus surgvu24, surgtoolloc2022, surgenet_robotic and grasp; the mixed-surgical block is the YouTube-scraped lemon corpus; the laparoscopic block covers cholec80, multibypass140, surgenet_lap, gynsurg, lapgyn6_events and heichole.',
+      k: [['robotic sources', '5'], ['mixed surgical', '1'], ['laparoscopic', '6'], ['largest single source', 'lemon · 902 h']]
+    },
+    campaign: {
+      t: 'Pretraining campaign',
+      g: '3 production runs · 3,038 node-hours',
+      b: 'Three production continued-pretraining runs at up to 256 nodes with a global batch of 6,144, plus exploratory screening over budget, catalog composition, sampling and masking objective. The longest configuration transfers best, though budget and catalog are not fully disentangled, so the campaign is reported as practical guidance rather than a scaling law.',
+      k: [['9.22M samples', '30 ep · 438 node-h'], ['18.43M samples', '60 ep · 872 node-h'], ['36.86M samples', '200 ep · 1,728 node-h', 1], ['downstream runs', '254 · 109 partial-FT']]
+    },
+    ytchole: {
+      t: 'YT-Chole Triplets',
+      g: 'Dataset 02 · public video, re-annotated',
+      b: 'Public cholecystectomy video re-annotated for multi-label action triplets ⟨tool, verb, target⟩ over ten procedures. Annotation reliability was measured rather than assumed: at a ±1 s tolerance Krippendorff’s α is 0.917 for the tool axis, with verb and target lower, which is the expected ordering for this ontology.',
+      k: [['procedures', '10'], ['classes', '5 tools · 6 verbs · 12 targets'], ['annotated video', '~6.4 h'], ['clips train / test', '3,537 / 1,696'], ['α tool @±1 s', '0.917']]
+    },
+    pr: {
+      t: 'OmniRAS-PR',
+      g: 'Dataset 01 · phase recognition',
+      b: 'Fifty-one robotic-cholecystectomy procedures annotated into eleven surgical phases: 41 from our private collection plus phase annotation of 10 public SurgeNet procedures. Inter-rater agreement rises from κ 0.664 exact to 0.741 at ±2 s and 0.807 at ±4 s, and 82.1% of disagreement sits inside the Calot’s-triangle cluster.',
+      k: [['procedures', '51 · 41 private + 10 public'], ['phases', '11'], ['annotated video', '~11.1 h'], ['private clips', '156,217 / 41,108'], ['κ exact → ±4 s', '0.664 → 0.807']]
+    },
+    sar: {
+      t: 'SAR-RARP50',
+      g: 'Frame-wise action recognition · F1@10',
+      b: 'Official test split. Under frozen probing every billion-scale video encoder already clears the published 84.10 reference; full fine-tuning of the 36.86M-sample OmniRAS 2B checkpoint takes it to the strongest result in the table, a 7.46-point gain in segmental F1@10 over that reference.',
+      k: [['OmniRAS 2B, full FT', '91.56 ± 0.25', 1], ['OmniRAS 2B, FT4', '90.88 ± 0.09'], ['frame-macro accuracy', '83.86 ± 0.16'], ['published reference', '84.10'], ['LemonFM / EndoViT / SurgeNet-XL', '75.0 / 69.8 / 68.1']]
+    },
+    gphase: {
+      t: 'GraSP — phases',
+      g: 'Surgical phase · mAP',
+      b: 'Evaluated as an out-of-the-box transfer of the SAR-RARP50 head, with no task-specific tuning on the GraSP test set. Full fine-tuning gives the highest phase mAP in the table, 8.62 points above TAPIS.',
+      k: [['OmniRAS 2B, full FT', '85.34 ± 0.33', 1], ['macro-F1', '79.22 ± 0.34'], ['OmniRAS 2B, FT4', '83.41 ± 0.63'], ['TAPIS', '76.72'], ['LemonFM FT4 / SurgeNet-XL', '75.37 / 67.58']]
+    },
+    gstep: {
+      t: 'GraSP — steps',
+      g: 'Surgical step · mAP',
+      b: 'The same benchmark exposes a trade-off: aggressive adaptation specializes the representation toward coarse workflow phases and step mAP collapses to 38.91 under full fine-tuning. Restricting adaptation to the last four blocks preserves the finer temporal distinctions and gives the best step result, 5.84 points over TAPIS.',
+      k: [['OmniRAS 2B, FT4', '57.85 ± 1.29', 1], ['OmniRAS 2B, full FT', '38.91 ± 1.04'], ['TAPIS', '52.01'], ['LemonFM FT4 / SurgeNet-XL', '48.56 / 45.35']]
+    },
+    esad: {
+      t: 'SARAS-ESAD',
+      g: 'Action detection · AP mean',
+      b: 'Last-four-block adaptation with augmentation. Augmentation is applied to our models only and adds about +0.028 AP mean on top of FT4, indicating headroom the no-augmentation baselines do not yet exploit. The result exceeds the best challenge submission on every detection AP metric.',
+      k: [['OmniRAS 2B, FT4 + aug', '0.2319 ± 0.0199', 1], ['FT4, no aug', '0.2035 ± 0.0132'], ['frozen', '0.1793 ± 0.0083'], ['AP10 / AP50', '0.3262 / 0.1127'], ['best challenge submission', '0.1928']]
+    },
+    prres: {
+      t: 'OmniRAS-PR — result',
+      g: 'Phase recognition · frame-F1',
+      b: 'Surgical pretraining shows most clearly here. Frozen OmniRAS 2B lifts frame-F1 from 23.76 to 44.89 against the raw Meta initialization; under matched last-four-block adaptation it reaches 47.92, and it also leads every segmental metric.',
+      k: [['OmniRAS 2B, FT4', '47.92 ± 0.53', 1], ['phase mAP', '61.11 ± 0.85'], ['F1@10 / @25 / @50', '67.15 / 64.66 / 59.76'], ['SurgeNet-XL / LemonFM / EndoViT', '36.6 / 34.9 / 25.6']]
+    },
+    ivt: {
+      t: 'YT-Chole — result',
+      g: 'Action triplet ⟨i,v,t⟩ · IVT mAP',
+      b: 'Depth of adaptation matters more than anywhere else in the suite: FT4 on the 36.86M checkpoint reaches 37.68 and extending to the last eight blocks reaches the overall best, 39.92. Target recognition carries the remaining headroom.',
+      k: [['OmniRAS 2B, FT8', '39.92 ± 0.91', 1], ['OmniRAS 2B, FT4', '37.68 ± 0.23'], ['tool / verb / target AP', '93.71 / 85.32 / 61.25'], ['SurgeNet-XL / LemonFM / EndoViT', '26.0 / 21.4 / 9.1']]
+    }
+  };
+
+  var current = null;
+
+  function open(btn) {
+    var d = DATA[btn.dataset.k];
+    if (!d) return;
+    if (current) current.classList.remove('is-open');
+    if (current === btn) { current = null; drawer.hidden = true; return; }
+    current = btn; btn.classList.add('is-open');
+    dTitle.textContent = d.t;
+    dTag.textContent   = d.g;
+    dBody.textContent  = d.b;
+    dKv.textContent    = '';
+    d.k.forEach(function (pair) {
+      var el = document.createElement('span');
+      if (pair[2]) el.className = 'lead';
+      var lab = document.createElement('b');
+      lab.textContent = pair[0] + '  ';
+      el.appendChild(lab);
+      el.appendChild(document.createTextNode(pair[1]));
+      dKv.appendChild(el);
+    });
+    drawer.hidden = false;
+  }
+
+  function shut() {
+    if (current) current.classList.remove('is-open');
+    current = null; drawer.hidden = true;
+  }
+
+  stage.addEventListener('click', function (e) {
+    var btn = e.target.closest('.hot');
+    if (btn) open(btn);
+  });
+  close.addEventListener('click', function () { var b = current; shut(); if (b) b.focus(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !drawer.hidden) shut();
+  });
+
+  regBtn.addEventListener('click', function () {
+    var on = document.body.classList.toggle('hot-armed');
+    regBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  wideBtn.addEventListener('click', function () {
+    var on = block.classList.toggle('wide');
+    wideBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    wideBtn.textContent = on ? 'Narrow' : 'Widen';
   });
 })();
 </script>
