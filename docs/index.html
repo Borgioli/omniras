@@ -407,7 +407,7 @@ body.hot-armed .hot.is-open { border-style: solid; }
 .ptab {
   border-collapse: collapse; font-size: .84rem;
   font-variant-numeric: tabular-nums;
-  width: 100%; max-width: 34rem;
+  width: 100%; max-width: 34rem; margin-inline: auto;
 }
 .ptab th, .ptab td { padding: .3rem 1.6rem .3rem 0; text-align: left; }
 .ptab td.num { text-align: right; padding-right: 0; white-space: nowrap; }
@@ -585,12 +585,19 @@ section { padding: 4.25rem 0; border-bottom: 1px solid var(--rule); }
 }
 .plate .frame img { display: block; width: 100%; height: auto; }
 /* The two portrait-ish plates are constrained as a whole figure, head and
-   caption included, so the "open full size" link stays over its own frame. */
-.plate.tall { max-width: 720px; }
+   caption included, so the "open full size" link stays over its own frame,
+   and the whole figure is centred in the column rather than left with a
+   third of the measure empty beside it. */
+.plate.tall { max-width: 720px; margin-inline: auto; }
 .plate figcaption { margin-top: .7rem; font-size: .825rem; }
 
 /* ---------- table ---------- */
-.tablewrap { overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--surface); }
+/* Five columns do not need the full 1140px column — at that width the run
+   names and their numbers drift apart. The box is capped and centred instead. */
+.tablewrap {
+  overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px;
+  background: var(--surface); max-width: 880px; margin-inline: auto;
+}
 table { border-collapse: collapse; width: 100%; font-size: .875rem; min-width: 580px; }
 caption { text-align: left; padding: 1rem 1.15rem .3rem; font-size: .855rem; color: var(--ink-3); }
 th, td { padding: .62rem 1.15rem; text-align: left; border-bottom: 1px solid var(--rule); }
