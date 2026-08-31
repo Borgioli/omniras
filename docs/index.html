@@ -650,7 +650,10 @@ tbody tr.hi td:first-child { font-weight: 600; }
   text-transform: uppercase; padding: .26rem .55rem; border-radius: 2px;
   border: 1px solid var(--rule-strong); color: var(--ink-3); white-space: nowrap;
 }
-.status.ready { border-color: var(--blue); color: var(--blue); }
+.rel-row .what a.inline-pdf {
+  color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule-strong);
+}
+.rel-row .what a.inline-pdf:hover { color: var(--blue); border-bottom-color: var(--blue); }
 
 /* ---------- bibtex ---------- */
 .bib {
@@ -766,7 +769,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     </div>
 
     <div class="links">
-      <a class="btn" href="static/omniras_paper.pdf">Paper <span class="tag">PDF</span></a>
+      <a class="btn" href="static/omniras_paper.pdf">Paper <span class="tag">under review</span></a>
       <span class="btn soon">arXiv <span class="tag">soon</span></span>
       <span class="btn soon">Checkpoints <span class="tag">soon</span></span>
       <span class="btn soon">Datasets <span class="tag">soon</span></span>
@@ -1226,8 +1229,9 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     </div>
     <div class="rel">
       <div class="rel-row">
-        <div class="what">Paper <small>Full text, 18 pages including diagnostic appendices</small></div>
-        <a class="status ready" href="static/omniras_paper.pdf">Available</a>
+        <div class="what"><a class="inline-pdf" href="static/omniras_paper.pdf">Paper</a>
+        <small>Manuscript under review; full text, 18 pages including diagnostic appendices</small></div>
+        <span class="status">Under review</span>
       </div>
       <div class="rel-row">
         <div class="what">arXiv preprint <small>Submission prepared</small></div>
@@ -1264,6 +1268,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
              Cassiani, Jessica and Ducas, Alvaro and Orda, Carlos Agustin and
              Waris, Hira and Xia, Fangfang and Stevens, Rick and
              Giulianotti, Pier Cristoforo and Zefran, Milos},
+  note    = {Manuscript under review},
   year    = {2026}
 }</pre>
     </div>
