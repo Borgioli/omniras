@@ -890,6 +890,9 @@ tbody tr.hi td:first-child { font-weight: 600; }
   text-transform: uppercase; padding: .26rem .55rem; border-radius: 2px;
   border: 1px solid var(--rule-strong); color: var(--ink-3); white-space: nowrap;
 }
+/* Every other row is pending, so the one live artifact is the only place the
+   status column carries ink rather than an outline. */
+.status.live { color: var(--gold-ink); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
 .rel-row .what a.inline-pdf {
   color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule-strong);
 }
@@ -1009,8 +1012,7 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     </div>
 
     <div class="links">
-      <a class="btn" href="static/omniras_paper.pdf">Paper <span class="tag">under review</span></a>
-      <span class="btn soon">arXiv <span class="tag">soon</span></span>
+      <a class="btn" href="https://arxiv.org/abs/2608.31048" target="_blank" rel="noopener">arXiv <span class="tag">2608.31048</span></a>
       <span class="btn soon">Checkpoints <span class="tag">soon</span></span>
       <span class="btn soon">Datasets <span class="tag">soon</span></span>
       <a class="btn ghost" href="#cite">BibTeX</a>
@@ -1569,13 +1571,13 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     </div>
     <div class="rel">
       <div class="rel-row">
-        <div class="what"><a class="inline-pdf" href="static/omniras_paper.pdf">Paper</a>
-        <small>Manuscript under review; full text, 18 pages including diagnostic appendices</small></div>
-        <span class="status">Under review</span>
+        <div class="what"><a class="inline-pdf" href="https://arxiv.org/abs/2608.31048" target="_blank" rel="noopener">arXiv preprint</a>
+        <small>arXiv:2608.31048 [eess.IV], 31 August 2026; full text, 18 pages including diagnostic appendices</small></div>
+        <span class="status live">Available</span>
       </div>
       <div class="rel-row">
-        <div class="what">arXiv preprint <small>Submission prepared</small></div>
-        <span class="status">Pending</span>
+        <div class="what">Journal version <small>Submitted to IEEE Transactions on Robotics</small></div>
+        <span class="status">Under review</span>
       </div>
       <div class="rel-row">
         <div class="what">OmniRAS checkpoints <small>1B and 2B V-JEPA-2.1 surgical encoders</small></div>
@@ -1608,6 +1610,10 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
              Cassiani, Jessica and Ducas, Alvaro and Orda, Carlos Agustin and
              Waris, Hira and Xia, Fangfang and Stevens, Rick and
              Giulianotti, Pier Cristoforo and Zefran, Milos},
+  journal = {arXiv preprint arXiv:2608.31048},
+  eprint  = {2608.31048},
+  archivePrefix = {arXiv},
+  primaryClass  = {eess.IV},
   note    = {Manuscript under review},
   year    = {2026}
 }</pre>

@@ -9,9 +9,9 @@ Pier Cristoforo Giulianotti, Milos Zefran
 <sub>\*Equal contribution. University of Illinois Chicago · Argonne National Laboratory ·
 Affiliated Hospital of Qingdao University</sub>
 
-📄 [Paper (PDF, manuscript under review)](docs/static/omniras_paper.pdf) ·
+📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) ·
 🌐 Project page (GitHub Pages, `docs/`) ·
-arXiv, checkpoints, and datasets — *coming soon*
+checkpoints and datasets — *coming soon*
 
 ---
 
@@ -128,8 +128,8 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 
 | Artifact | Status |
 |---|---|
-| Paper | ⏳ Manuscript under review (PDF in this repo) |
-| arXiv preprint | ⏳ Submission prepared |
+| arXiv preprint | ✅ [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) |
+| Journal version | ⏳ Under review at IEEE T-RO |
 | OmniRAS checkpoints (1B, 2B) | ⏳ Pending |
 | OmniRAS-PR | ⏳ Pending IRB / data-use review |
 | YT-Chole Triplets | ⏳ Pending IRB / data-use review |
