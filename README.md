@@ -4,7 +4,7 @@
 
 Leonardo Borgioli\*, Neil Getty\*, Wenli Xiu, Jessica Cassiani, Alvaro Ducas,
 Carlos Agustin Orda, Hira Waris, Fangfang Xia, Rick Stevens,
-Pier Cristoforo Giulianotti, Milos Zefran
+Pier Cristoforo Giulianotti, Miloš Žefran
 
 <sub>\*Equal contribution. University of Illinois Chicago · Argonne National Laboratory ·
 Affiliated Hospital of Qingdao University</sub>
@@ -154,7 +154,7 @@ Source: Deploy from a branch → `main` / `docs`**.
   author  = {Borgioli, Leonardo and Getty, Neil and Xiu, Wenli and
              Cassiani, Jessica and Ducas, Alvaro and Orda, Carlos Agustin and
              Waris, Hira and Xia, Fangfang and Stevens, Rick and
-             Giulianotti, Pier Cristoforo and Zefran, Milos},
+             Giulianotti, Pier Cristoforo and {\v{Z}}efran, Milo{\v{s}}},
   year    = {2026}
 }
 ```
