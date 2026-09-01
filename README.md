@@ -131,8 +131,8 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 | arXiv preprint | ✅ [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) |
 | Journal version | ⏳ Under review at IEEE T-RO |
 | OmniRAS checkpoints (1B, 2B) | ⏳ Pending |
-| OmniRAS-PR | ⏳ Pending IRB / data-use review |
-| YT-Chole Triplets | ⏳ Pending IRB / data-use review |
+| OmniRAS-PR | ⏳ Pending |
+| YT-Chole Triplets | ⏳ Pending |
 | Evaluation code | ⏳ Pending |
 
 The two datasets were constructed under two separate IRB-approved protocols. Their release will
