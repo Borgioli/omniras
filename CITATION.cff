@@ -10,6 +10,11 @@ abstract: >-
   surgical models across six tasks under frozen-encoder and partial fine-tuning regimes.
 type: article
 year: 2026
+identifiers:
+  - type: other
+    value: "arXiv:2608.31048"
+    description: arXiv preprint
+url: "https://arxiv.org/abs/2608.31048"
 license: CC-BY-4.0
 keywords:
   - robot-assisted surgery
@@ -50,6 +55,6 @@ authors:
   - family-names: Giulianotti
     given-names: Pier Cristoforo
     affiliation: "Department of Surgery, University of Illinois Chicago"
-  - family-names: Zefran
-    given-names: Milos
+  - family-names: Žefran
+    given-names: Miloš
     affiliation: "Department of Electrical and Computer Engineering, University of Illinois Chicago"
