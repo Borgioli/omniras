@@ -10,7 +10,7 @@ Pier Cristoforo Giulianotti, Miloš Žefran
 Affiliated Hospital of Qingdao University</sub>
 
 📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) ·
-🌐 Project page (GitHub Pages, `docs/`) ·
+🌐 [Project page](https://borgioli.github.io/omniras/) ·
 checkpoints and datasets — *coming soon*
 
 ---
@@ -142,8 +142,7 @@ that way.
 
 ## Project page
 
-The site under `docs/` is served by GitHub Pages. To enable it: repository **Settings → Pages →
-Source: Deploy from a branch → `main` / `docs`**.
+Live at **<https://borgioli.github.io/omniras/>**, served by GitHub Pages from `docs/` on `main`.
 
 ## Citation
 
