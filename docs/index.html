@@ -307,6 +307,7 @@ body.intro-done .figframe img { animation: card-in 1.15s cubic-bezier(.22,.9,.3,
 }
 .btn.soon:hover { color: var(--ink-3); border-color: var(--rule-strong); }
 .btn .tag { font-size: .64rem; letter-spacing: .1em; opacity: .72; }
+.btn .gh { flex: none; margin-right: -.12rem; position: relative; top: -.5px; }
 
 /* ---------- figure ---------- */
 .figblock { padding: 2.75rem 0 0; }
@@ -922,6 +923,8 @@ footer { padding: 3rem 0 4rem; }
 .foot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
 footer p { font-size: .865rem; color: var(--ink-3); line-height: 1.7; max-width: 72ch; }
 footer .eyebrow { display: block; margin-bottom: .6rem; }
+footer p a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--rule-strong); }
+footer p a:hover { color: var(--blue); border-bottom-color: var(--blue); }
 </style>
 </head>
 <body>
@@ -1018,6 +1021,9 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
 
     <div class="links">
       <a class="btn" href="https://arxiv.org/abs/2608.31048" target="_blank" rel="noopener">arXiv <span class="tag">2608.31048</span></a>
+      <a class="btn ghost" href="https://github.com/Borgioli/omniras" target="_blank" rel="noopener">
+        <svg class="gh" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub</a>
       <span class="btn soon">Checkpoints <span class="tag">soon</span></span>
       <span class="btn soon">Datasets <span class="tag">soon</span></span>
       <a class="btn ghost" href="#cite">BibTeX</a>
@@ -1644,7 +1650,8 @@ footer .eyebrow { display: block; margin-bottom: .6rem; }
     <div>
       <span class="eyebrow">Contact</span>
       <p>University of Illinois Chicago · Argonne National Laboratory<br>
-      Page content reflects the current manuscript; release links will be added here as each artifact
+      Source for this page: <a href="https://github.com/Borgioli/omniras" target="_blank" rel="noopener">github.com/Borgioli/omniras</a>.
+      Page content reflects the current manuscript; release links will be added there as each artifact
       clears review.</p>
     </div>
   </div>
