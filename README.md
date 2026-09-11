@@ -10,8 +10,8 @@ Pier Cristoforo Giulianotti, Miloš Žefran
 Affiliated Hospital of Qingdao University</sub>
 
 📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) ·
-🌐 [Project page](https://borgioli.github.io/omniras/) ·
-checkpoints and datasets — *coming soon*
+🌐 [Project page](https://go.uic.edu/omniras) ·
+[Request checkpoint and dataset access (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform?usp=publish-editor)
 
 ---
 
@@ -130,10 +130,14 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 |---|---|
 | arXiv preprint | ✅ [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) |
 | Journal version | ⏳ Under review at IEEE T-RO |
-| OmniRAS checkpoints (1B, 2B) | ⏳ Pending |
-| OmniRAS-PR | ⏳ Pending |
-| YT-Chole Triplets | ⏳ Pending |
+| OmniRAS checkpoints (1B, 2B) | [Request access][access-form] |
+| OmniRAS-PR | [Request access][access-form] |
+| YT-Chole Triplets | [Request access][access-form] |
 | Evaluation code | ⏳ Pending |
+
+[access-form]: https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform?usp=publish-editor
+
+To request access to the checkpoints or datasets, complete the [Google Form][access-form].
 
 The two datasets were constructed under two separate IRB-approved protocols. Their release will
 follow the corresponding institutional, privacy, and data-use requirements. **No surgical video or
@@ -142,7 +146,7 @@ that way.
 
 ## Project page
 
-Live at **<https://borgioli.github.io/omniras/>**, served by GitHub Pages from `docs/` on `main`.
+Live at **<https://go.uic.edu/omniras>**, served by GitHub Pages from `docs/` on `main`.
 
 ## Citation
 
