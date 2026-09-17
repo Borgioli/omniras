@@ -1,0 +1,58 @@
+{
+  "paper": "https://arxiv.org/abs/2608.31048v2",
+  "source": "https://arxiv.org/src/2608.31048v2",
+  "revised": "2026-09-09",
+  "verified": "2026-09-17",
+  "source_archive_sha256": "bbff0a12bc1a975c3fd793ed6680adfe101fceafa21b292267eac20d5ea16917",
+  "figures": {
+    "omniras_overview": {
+      "arxiv_source_file": "figure1_modelcard_new.pdf",
+      "pdf_sha256": "57cccc2412d49a95bd8914aa6450ed4f1d619c51f62af42a99f4bc30335ba744",
+      "png_sha256": "6e7f9a1cc8ec33aa7d63da16e01cb65f27c23e383173e2ad753b231c657ae1f0",
+      "render_dpi": 170
+    },
+    "hist_sar": {
+      "arxiv_source_file": "pdf/table05_sar_action.pdf",
+      "pdf_sha256": "b26995ddbaf24c85ea120772cdb601c2cd2c5dfb436a874cc1a2cc8b9dc20ceb",
+      "png_sha256": "aa9bc1432395a05b4e9a37fe2192a4ac58d092d8cf52fa0a879be60300d730d9",
+      "render_dpi": 200
+    },
+    "hist_grasp": {
+      "arxiv_source_file": "pdf/table08_grasp.pdf",
+      "pdf_sha256": "904489d277e93840785ed1fc3eb91c03aedd41f6e4d9298ea8562641d67d3f18",
+      "png_sha256": "eee5d7814b25f30ffa837d5008cc410ebfdcb4b35091099295d66a56bdf936ea",
+      "render_dpi": 200
+    },
+    "hist_pr": {
+      "arxiv_source_file": "pdf/table04b_omniras_pr_phases.pdf",
+      "pdf_sha256": "45e50ec356b03a695f90d446d8eea7332f10ac8d098b00c40af350b6ec39e227",
+      "png_sha256": "7aabe87fba1353af86a040e715838d0839ceb2924449ecfb249362f9d0bf772a",
+      "render_dpi": 150
+    },
+    "hist_triplets": {
+      "arxiv_source_file": "pdf/table03_yt_chole_triplets.pdf",
+      "pdf_sha256": "01616abfe7814a61167e5998f96fd9ac11b579eda21cfc9969db9c7008119c9f",
+      "png_sha256": "0ed8d88980bb13af24e9db1e337d6b3b9219ac3c069e9000735a038ef9768c7d",
+      "render_dpi": 150
+    },
+    "hist_esad": {
+      "arxiv_source_file": "pdf/table18_saras_esad_onepop.pdf",
+      "pdf_sha256": "15907d341ad98e6ed91c507522952e1b77ca07f4583e8c37441d5d761cdda7e5",
+      "png_sha256": "4fb7213823c8a0da69ba3b25b11c5418f7dda6dcd63877ea8e45242e5357a0dd",
+      "render_dpi": 150
+    },
+    "hist_pretrain": {
+      "arxiv_source_file": "pdf/table22_pretrain_progression.pdf",
+      "pdf_sha256": "29262e28e12ff92a01de6598141b32a83b62a4bf2e55a561c75940166e013d17",
+      "png_sha256": "6cabaee87f859320e67a0b994033071e4f23463f38318d4e72cfdb88b01e018e",
+      "render_dpi": 150
+    }
+  },
+  "verification": {
+    "histogram_panels": 23,
+    "histogram_bars": 344,
+    "means_and_printed_standard_deviations": "All match the v2 vector PDF text. Missing printed standard deviations remain null.",
+    "model_card": "Pixels match the v2 source rendered at 170 dpi.",
+    "pretraining_probe_values": "All 24 IVT/GraSP checkpoint values match v2 pretraining.tex and its figure."
+  }
+}
