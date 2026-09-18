@@ -1,0 +1,15 @@
+{
+  "updated": "2026-09-18",
+  "base": "../arxiv-v2/omniras_overview.pdf",
+  "base_sha256": "57cccc2412d49a95bd8914aa6450ed4f1d619c51f62af42a99f4bc30335ba744",
+  "change": "Replace ~160+ probe-finetune runs with 254; explicitly include 109 partial-FT runs.",
+  "evidence": "Local vjepa_paper_arxiv/main.tex abstract and opening of Results; same totals already in project-page text.",
+  "semantics": "254 counts seed-level downstream runs; 109 partial-backbone fine-tuning runs are a subset.",
+  "scope": "Count panel only; other content reproduced from the archived arXiv figure.",
+  "pdf_sha256": "f046596059e9288899dbb85b83debbef6b4d47899e6e898e6c9b3a9f9c385239",
+  "png_sha256": "a8fcd21c983c3e6cda2d10524e7345679712f57d394cc42f61038c40661ab76e",
+  "render_dpi": 170,
+  "png_width": 3273,
+  "png_height": 1743,
+  "verification": "Only count-panel pixels differ at 72 dpi; old text removed from PDF extraction."
+}

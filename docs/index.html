@@ -8,7 +8,7 @@
 <meta property="og:title" content="OmniRAS">
 <meta property="og:description" content="Standardizing foundation model training and evaluation in robot-assisted surgery.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://borgioli.github.io/omniras/static/images/omniras_overview.png?v=arxiv-v2">
+<meta property="og:image" content="https://borgioli.github.io/omniras/static/images/omniras_overview.png?v=counts-20260918">
 <meta property="og:image:alt" content="The OmniRAS model card: pretraining corpus, encoder family, and the six downstream benchmarks.">
 <meta property="og:url" content="https://go.uic.edu/omniras">
 <meta property="og:site_name" content="OmniRAS">
@@ -1040,7 +1040,7 @@ footer p a:hover { color: var(--blue); border-bottom-color: var(--blue); }
 
     <div class="figframe">
       <div class="figstage">
-        <img src="static/images/omniras_overview.png?v=arxiv-v2" width="3273" height="1743"
+        <img src="static/images/omniras_overview.png?v=counts-20260918" width="3273" height="1743"
              alt="OmniRAS overview. Left: the pretraining corpus, about 2,650 hours across 19 sources — 51% robotic, 34% mixed surgical, 15% laparoscopic. Right: the two densely annotated benchmarks released with this work, YT-Chole Triplets and OmniRAS-PR. Bottom: headline results on six surgical benchmarks, with OmniRAS leading each panel.">
         <div class="hotspots" id="hotspots">
           <button class="hot round" data-k="corpus"   data-label="Pretraining corpus" aria-label="Pretraining corpus" style="left:2.903%;top:25.416%;width:13.321%;height:25.014%"></button>
@@ -1075,8 +1075,11 @@ footer p a:hover { color: var(--blue); border-bottom-color: var(--blue); }
       19-source, approximately 2,650-hour surgical-video catalog that is 51% da Vinci robotic video by hours,
       and evaluated on the two densely annotated robotic-cholecystectomy datasets released with this work
       together with the public SAR-RARP50, GraSP, and SARAS-ESAD benchmarks.
-      Model card from <a href="https://arxiv.org/abs/2608.31048v2" target="_blank" rel="noopener">arXiv v2 (September 9, 2026)</a>
-      &middot; <a href="static/figures/arxiv-v2/omniras_overview.pdf" target="_blank" rel="noopener">Original model card (PDF)</a>.
+      Model card based on <a href="https://arxiv.org/abs/2608.31048v2" target="_blank" rel="noopener">arXiv v2</a>,
+      with the run count corrected on September 18, 2026: <b>254 downstream seed-level runs,
+      including 109 with partial backbone fine-tuning</b>.
+      <a href="static/figures/updated-20260918/omniras_overview.pdf" target="_blank" rel="noopener">Updated model card (PDF)</a>
+      &middot; <a href="static/figures/arxiv-v2/omniras_overview.pdf" target="_blank" rel="noopener">Archived arXiv figure</a>.
     </figcaption>
   </figure>
 </div>

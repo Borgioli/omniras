@@ -35,6 +35,12 @@ Three contributions:
    frozen-encoder and partial fine-tuning regimes. Three seeds, 254 downstream runs, 109 with
    partial backbone fine-tuning.
 
+The [model card](docs/static/figures/updated-20260918/omniras_overview.pdf) was
+corrected on September 18, 2026 to show **254 downstream seed-level runs,
+including 109 with partial backbone fine-tuning**, replacing the older ~160+
+estimate. The [original arXiv figure](docs/static/figures/arxiv-v2/omniras_overview.pdf)
+is retained for provenance. The 109 runs are included in the 254 total.
+
 ## Results
 
 Representative configuration per benchmark, versus the strongest published or baseline system
