@@ -11,7 +11,7 @@ Affiliated Hospital of Qingdao University</sub>
 
 📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) ·
 🌐 [Project page](https://go.uic.edu/omniras) ·
-[Request checkpoint and dataset access (Google Form)](https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform?usp=publish-editor)
+[Hugging Face checkpoints][hf-models] · [Hugging Face datasets][hf-datasets]
 
 ---
 
@@ -136,14 +136,16 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 |---|---|
 | arXiv preprint | ✅ [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) |
 | Journal version | ⏳ Under review at IEEE T-RO |
-| OmniRAS checkpoints (1B, 2B) | [Request access][access-form] |
-| OmniRAS-PR | [Request access][access-form] |
-| YT-Chole Triplets | [Request access][access-form] |
+| OmniRAS checkpoints (1B, 2B) | [Request access on Hugging Face][hf-models] |
+| OmniRAS-PR | [Request access on Hugging Face][hf-datasets] |
+| YT-Chole Triplets | [Request access on Hugging Face][hf-datasets] |
 | Evaluation code | ⏳ Pending |
 
-[access-form]: https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform?usp=publish-editor
+[hf-models]: https://huggingface.co/BorgioliSITL/OmniRAS
+[hf-datasets]: https://huggingface.co/datasets/BorgioliSITL/OmniRAS
 
-To request access to the checkpoints or datasets, complete the [Google Form][access-form].
+Request access on the corresponding Hugging Face [model][hf-models] or
+[dataset][hf-datasets] page. Requests are reviewed manually for each repository.
 
 The two datasets were constructed under two separate IRB-approved protocols. Their release will
 follow the corresponding institutional, privacy, and data-use requirements. **No surgical video or
