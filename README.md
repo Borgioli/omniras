@@ -147,6 +147,10 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 Request access on the corresponding Hugging Face [model][hf-models] or
 [dataset][hf-datasets] page. Requests are reviewed manually for each repository.
 
+We are keeping the [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform)
+available during the transition from Box to Hugging Face. **Box files will no longer
+be updated.** Please use Hugging Face for the latest checkpoints and datasets.
+
 The two datasets were constructed under two separate IRB-approved protocols. Their release will
 follow the corresponding institutional, privacy, and data-use requirements. **No surgical video or
 patient-derived data is committed to this repository**, and `.gitignore` is configured to keep it
