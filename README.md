@@ -135,7 +135,7 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 | Artifact | Status |
 |---|---|
 | arXiv preprint | ✅ [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) |
-| Journal version | ⏳ Under review at IEEE T-RO |
+| Journal version | ⏳ Submitted to Medical Image Analysis (MedIA) |
 | OmniRAS checkpoints (1B, 2B) | [Request access on Hugging Face][hf-models] |
 | OmniRAS-PR | [Request access on Hugging Face][hf-datasets] |
 | YT-Chole Triplets | [Request access on Hugging Face][hf-datasets] |
