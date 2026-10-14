@@ -35,11 +35,8 @@ Three contributions:
    frozen-encoder and partial fine-tuning regimes. Three seeds, 254 downstream runs, 109 with
    partial backbone fine-tuning.
 
-The [model card](docs/static/figures/updated-20260918/omniras_overview.pdf) was
-corrected on September 18, 2026 to show **254 downstream seed-level runs,
-including 109 with partial backbone fine-tuning**, replacing the older ~160+
-estimate. The [original arXiv figure](docs/static/figures/arxiv-v2/omniras_overview.pdf)
-is retained for provenance. The 109 runs are included in the 254 total.
+[Model card (PDF)](docs/static/figures/updated-20260918/omniras_overview.pdf) ·
+[Project video](https://go.uic.edu/omniras#video)
 
 ## Results
 
@@ -159,11 +156,6 @@ Request access on the corresponding Hugging Face [model][hf-models] or
 We are keeping the [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfXCTF9ISdQ3a_I87wYowRh-0QNLWzCC3ZqQ7wpqbnlgZMN0A/viewform)
 available during the transition from Box to Hugging Face. **Box files will no longer
 be updated.** Please use Hugging Face for the latest checkpoints and datasets.
-
-The two datasets were constructed under two separate IRB-approved protocols. Their release will
-follow the corresponding institutional, privacy, and data-use requirements. **No surgical video or
-patient-derived data is committed to this repository**, and `.gitignore` is configured to keep it
-that way.
 
 ## Project page
 

@@ -21,7 +21,7 @@ venv/
 *.fls
 *.fdb_latexmk
 
-# Large local data — never commit video or checkpoints
+# Research data and checkpoints
 *.mp4
 *.mkv
 *.pth
@@ -30,3 +30,5 @@ venv/
 *.safetensors
 data/
 checkpoints/
+
+!docs/static/videos/omniras.mp4

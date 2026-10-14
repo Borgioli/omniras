@@ -1030,6 +1030,16 @@ footer p a:hover { color: var(--blue); border-bottom-color: var(--blue); }
   </div>
 </header>
 
+<div class="wrap" id="video" style="max-width:960px;margin:0 auto 3rem">
+  <video controls playsinline preload="metadata" width="1536" height="1024"
+         poster="static/images/omniras_video_poster.png"
+         aria-label="OmniRAS project animation"
+         style="display:block;width:100%;height:auto;border-radius:12px">
+    <source src="static/videos/omniras.mp4" type="video/mp4">
+    <a href="static/videos/omniras.mp4">Watch the OmniRAS project video</a>.
+  </video>
+</div>
+
 <div class="wrap figblock" id="figblock">
   <figure>
     <div class="card-toolbar">
@@ -1075,11 +1085,8 @@ footer p a:hover { color: var(--blue); border-bottom-color: var(--blue); }
       19-source, approximately 2,650-hour surgical-video catalog that is 51% da Vinci robotic video by hours,
       and evaluated on the two densely annotated robotic-cholecystectomy datasets released with this work
       together with the public SAR-RARP50, GraSP, and SARAS-ESAD benchmarks.
-      Model card based on <a href="https://arxiv.org/abs/2608.31048v2" target="_blank" rel="noopener">arXiv v2</a>,
-      with the run count corrected on September 18, 2026: <b>254 downstream seed-level runs,
-      including 109 with partial backbone fine-tuning</b>.
-      <a href="static/figures/updated-20260918/omniras_overview.pdf" target="_blank" rel="noopener">Updated model card (PDF)</a>
-      &middot; <a href="static/figures/arxiv-v2/omniras_overview.pdf" target="_blank" rel="noopener">Archived arXiv figure</a>.
+      The evaluation includes <b>254 downstream runs, including 109 with partial backbone fine-tuning</b>.
+      <a href="static/figures/updated-20260918/omniras_overview.pdf" target="_blank" rel="noopener">Model card (PDF)</a>.
     </figcaption>
   </figure>
 </div>
