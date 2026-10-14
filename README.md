@@ -13,6 +13,8 @@ Affiliated Hospital of Qingdao University</sub>
 🌐 [Project page](https://go.uic.edu/omniras) ·
 [Hugging Face checkpoints][hf-models] · [Hugging Face datasets][hf-datasets]
 
+[![OmniRAS model card: pretraining corpus, encoder family, and downstream benchmarks](docs/static/images/omniras_overview.png)](docs/static/figures/updated-20260918/omniras_overview.pdf)
+
 ---
 
 ## What this is
