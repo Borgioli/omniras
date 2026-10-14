@@ -130,6 +130,14 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 - **L3** — Lock reproducibility conventions and diagnostic probes before launch. Checkpoint indexing,
   epoch definitions, data manifests, and probe locations are hard to reconstruct afterwards.
 
+## Inference code
+
+Code, configurations, class mappings, and usage instructions are available in
+[`inference/`](https://huggingface.co/BorgioliSITL/OmniRAS/blob/main/inference/README.md) for **OmniRAS-PR phase recognition**,
+[**YT-Chole Triplets**](https://huggingface.co/BorgioliSITL/OmniRAS/blob/main/inference/TRIPLETS.md), [**GraSP phase and step**](https://huggingface.co/BorgioliSITL/OmniRAS/blob/main/inference/GRASP.md),
+and [**SAR-RARP50 actions**](https://huggingface.co/BorgioliSITL/OmniRAS/blob/main/inference/SAR.md). Follow the task instructions for
+checkpoint placement, dataset extraction, and running predictions.
+
 ## Release status
 
 | Artifact | Status |
@@ -139,10 +147,11 @@ recipe) was approximately probe-neutral. This is reported as practical guidance,
 | OmniRAS checkpoints (1B, 2B) | [Request access on Hugging Face][hf-models] |
 | OmniRAS-PR | [Request access on Hugging Face][hf-datasets] |
 | YT-Chole Triplets | [Request access on Hugging Face][hf-datasets] |
-| Evaluation code | ⏳ Pending |
+| Inference code, configs, and class mappings | [Available with model access][hf-inference] |
 
 [hf-models]: https://huggingface.co/BorgioliSITL/OmniRAS
 [hf-datasets]: https://huggingface.co/datasets/BorgioliSITL/OmniRAS
+[hf-inference]: https://huggingface.co/BorgioliSITL/OmniRAS/tree/main/inference
 
 Request access on the corresponding Hugging Face [model][hf-models] or
 [dataset][hf-datasets] page. Requests are reviewed manually for each repository.
