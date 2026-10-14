@@ -9,9 +9,11 @@ Pier Cristoforo Giulianotti, Miloš Žefran
 <sub>\*Equal contribution. University of Illinois Chicago · Argonne National Laboratory ·
 Affiliated Hospital of Qingdao University</sub>
 
-📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048) ·
-🌐 [Project page](https://go.uic.edu/omniras) ·
-[Hugging Face checkpoints][hf-models] · [Hugging Face datasets][hf-datasets]
+📄 [arXiv:2608.31048](https://arxiv.org/abs/2608.31048)
+
+[![Project page](docs/static/badges/project-page.svg)](https://go.uic.edu/omniras)
+[![Hugging Face checkpoints](docs/static/badges/checkpoints.svg)][hf-models]
+[![Hugging Face datasets](docs/static/badges/datasets.svg)][hf-datasets]
 
 [![OmniRAS model card: pretraining corpus, encoder family, and downstream benchmarks](docs/static/images/omniras_overview.png)](docs/static/figures/updated-20260918/omniras_overview.pdf)
 
