@@ -15,7 +15,7 @@ identifiers:
     value: "arXiv:2608.31048"
     description: arXiv preprint
 url: "https://arxiv.org/abs/2608.31048"
-license: CC-BY-4.0
+license: CC-BY-NC-4.0
 keywords:
   - robot-assisted surgery
   - surgical data science

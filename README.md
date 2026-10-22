@@ -165,6 +165,20 @@ be updated.** Please use Hugging Face for the latest checkpoints and datasets.
 
 Live at **<https://go.uic.edu/omniras>**, served by GitHub Pages from `docs/` on `main`.
 
+## License
+
+Copyright (c) 2026 the OmniRAS authors.
+
+The original content of this repository is licensed under
+[Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](LICENSE).
+Sharing and adaptation, including for noncommercial research, are permitted with
+attribution. Commercial use requires separate permission from the rights holders.
+
+The [model release][hf-models] and [dataset release][hf-datasets] also use
+CC BY-NC 4.0 for OmniRAS-owned materials. Third-party code, models, and source
+footage retain their respective licenses and terms; see each release's license
+section for its scope.
+
 ## Citation
 
 ```bibtex
